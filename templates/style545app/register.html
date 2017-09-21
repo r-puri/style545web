@@ -1,0 +1,31 @@
+{% extends 'style545app/base.html' %}
+{% load bootstrap_toolkit %}
+{% load style545_extras %}
+
+{% load staticfiles %}
+
+
+
+{% block title %}Register User{% endblock %}
+
+{% block body_block %}
+<h1>Register with Style545</h1>
+
+        {% if registered %}
+        <strong>Thank you for registering!</strong>
+        <a href="/Style545app/looks">Return to the homepage.</a><br />
+        {% else %}
+        <h2 class="form-signin-heading">Sign Up Here</h2>
+
+        <form class="form-horizontal" id="user_form" method="post" action="/style545app/register/"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+            {{ user_form|as_bootstrap }}
+            <br/>
+            <button class="btn btn-primary" type="submit" value="Submit">Sign in</button>
+
+
+         </form>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% if items %}
+    <select id="selectitems">
+    {% for i in items %}
+        <option value="{{i.itemid}}">{{i.item_name}}</option>
+    {% endfor %}
+</select>
+{% else %}
+    <li> <strong >There are no Items present.</strong></li>
+
+{% endif %}

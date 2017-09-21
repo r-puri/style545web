@@ -1,0 +1,157 @@
+{% extends 'style545app/base.html' %}
+{% load style545_extras %}
+
+{% load staticfiles %}
+
+
+
+{% block title %}Looks{% endblock %}
+
+{% block body_block %}
+<script>
+function getimageurl(item)
+{
+  obj=JSON.parse(document.getElementById("item"+item).value)
+  document.getElementById("itemimage"+itemn).src = obj.url
+}
+function getprice(price,itemn)
+{
+  var obj
+  try{
+   obj=JSON.parse(price)
+}
+catch (err)
+{
+  alert(err.message)
+}
+if (isNaN(parseInt(obj.item_price)))
+{
+  price=0
+}
+else {
+  price=parseInt(obj.item_price)
+}
+document.getElementById("price"+itemn).value = price
+document.getElementById("itemimage"+itemn).src = obj.itemimageurl
+totalprice();
+obj=null
+}
+function totalprice()
+{
+  var temp = new Array();
+  var total=0;
+  temp = document.getElementById("itemnumber").value.split(",")
+  for (i=1; i<=temp.length;i++)
+  {
+    var currprice=parseInt(document.getElementById("price"+i.toString()).value)
+    if (!isNaN(currprice))
+    total=total+currprice;
+  }
+
+    document.getElementById("total").value =total
+}
+function validateform()
+{
+  if (document.getElementById("lookname").value =="")
+  {
+    alert ('Look name cannot be empty')
+    return (false)
+  }
+  else {
+    return(true)
+  }
+}
+function submitform()
+{
+  if (validateform()){
+    document.getElementById("category_form").submit()
+  }
+
+}
+</script>
+    <div class="page-header">
+                <h1>Looks Master</h1>
+    </div>
+     <form id="category_form" method="post" action="/style545app/">
+        {% csrf_token %}
+       <div>
+         <p> Logged in Stylist: <label value="">{{ user.get_username }}</label>
+          <p> Look Name:  <input type="text" id="lookname" name="lookname" value="" length=50></input>
+           <hr/>
+<p><input type="hidden" id="itemnumber" value="{{noofitems}}"/></p>
+  {%for i in noofitems%}
+    <p>Categories:
+      <select id="selectcategory-{{forloop.counter}}">
+      {% get_category_list %}
+    </select>
+    </p>
+         {% if items %}
+                 <p>Select Item&nbsp;<select name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
+                   {% for item in items %}
+                     <option value="{&quot;item_price&quot;:&quot;{{ item.item_price }}&quot;,&quot;id&quot;:&quot;{{ item.itemid}}&quot;,&quot;itemimageurl&quot;:&quot;{{ item.itemimageurl }}&quot;}">{{ item.item_name }}</option>
+                  {%endfor%}
+                 </select>
+
+                 <img src=""  height="100" width="100"alt="" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
+                 <script>obj=JSON.parse(document.getElementById("item{{forloop.counter}}").value)
+                 document.getElementById("itemimage{{forloop.counter}}").src = obj.itemimageurl</script>
+                 <p>Price: <input type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true"></input></p>
+                 <script>if (isNaN(parseInt(obj.item_price))) {document.getElementById("price{{forloop.counter}}").value = 0} else {document.getElementById("price{{forloop.counter}}").value = obj.item_price }</script>
+                 <hr/>
+         {% else %}
+             <strong>There are no items present.</strong>
+         {% endif %}
+  {%endfor%}
+
+
+               <p>Total Look Price: <input type="text" name="total" id="total" disabled="true"></input></p>
+               <hr/>
+
+        {% if styles %}
+        <p>Pick Applicable Styles</p>
+         {% for style in styles %}
+          <input type="checkbox" name="stylescheck" id="stylescheck{{forloop.counter}}" value="{{ style.styleid }}">{{ style.stylename }}</input><br/>
+          {%endfor%}
+        {% else %}
+            <strong>There are no styles present.</strong>
+        {% endif %}
+       </div>
+       <hr/>
+       <div>
+       {% if occasions %}
+       <p>Pick Occasion Types</p>
+        {% for occasion in occasions %}
+         <input type="checkbox" name="occasioncheck" id="occasioncheck{{forloop.counter}}" value="{{ occasion.occassionid }}">{{ occasion.occassion_name }}</input><br/>
+         {%endfor%}
+       {% else %}
+           <strong>There are no occasions present.</strong>
+       {% endif %}
+      </div>
+      <hr/>
+      <div>
+      {% if body_list %}
+      <p>Pick Body Types</p>
+       {% for bodytype in body_list %}
+        <input type="checkbox" name="bodytype" id="bodytype{{forloop.counter}}" value="{{ bodytype.id }}">{{ bodytype.bodytype }}</input><br/>
+        {%endfor%}
+      {% else %}
+          <strong>There are no body types present.</strong>
+      {% endif %}
+     </div>
+     <hr/>
+      <div>
+      {% if budgets %}
+      <p>Pick Budget Types</p>
+          <select name="budgettype" id="budgettype">
+       {% for budget in budgets %}
+          <option value="{{budget.budgetid}}">{{budget.budgetname}}</option>
+        {%endfor%}
+      </select>
+      {% else %}
+          <strong>There are no budgets present.</strong>
+      {% endif %}
+     </div>
+     <hr/>
+   <button class="btn btn-primary" type="button"  onclick="submitform()">Submit</button>
+     </form>
+{% endblock %}

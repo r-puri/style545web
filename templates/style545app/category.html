@@ -1,0 +1,9 @@
+{% load style545_extras %}
+{% if cats %}
+    {% for c in cats %}
+        <option value="{{c.id}}">{{c.categoryname}}</option>
+    {% endfor %}
+{% else %}
+    <li> <strong >There are no categories present.</strong></li>
+
+{% endif %}

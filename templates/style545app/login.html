@@ -1,0 +1,32 @@
+{% extends 'style545app/base.html' %}
+{% load style545_extras %}
+
+{% load staticfiles %}
+
+
+
+{% block title %}Login to Style545{% endblock %}
+{% block body_block %}
+
+<link href="http://getbootstrap.com/examples/signin/signin.css" rel="stylesheet">
+
+<form class="form-signin" role="form" method="post" action=".">
+{% csrf_token %}
+
+<h2 class="form-signin-heading">Please sign in</h2>
+{% if authenticated == False %}
+<p class="text-danger">Login Failed </p>
+{%endif%}
+<div class="form-group">
+   <label for="id_username">User name</label>
+   <input class="form-control" placeholder="Username" id="id_username" maxlength="254" name="username" type="text" required autofocus=""/>
+</div>
+<div class="form-group">
+  <label for="id_password">Password</label>
+  <input type="password" class="form-control" placeholder="Password" id="id_password" name="password"  required />
+<div>
+<br/>
+        <button class="btn btn-primary" type="submit" value="Submit" >Sign in</button>
+        </form>
+
+{% endblock %}
