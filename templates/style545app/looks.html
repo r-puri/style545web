@@ -1,19 +1,16 @@
 {% extends 'style545app/base.html' %}
+
 {% load style545_extras %}
 
 {% load staticfiles %}
 
 
-
 {% block title %}Looks{% endblock %}
 
 {% block body_block %}
+<script src="{% static "js/style545.js" %}"></script>
+
 <script>
-function getimageurl(item)
-{
-  obj=JSON.parse(document.getElementById("item"+item).value)
-  document.getElementById("itemimage"+itemn).src = obj.url
-}
 function getprice(price,itemn)
 {
   var obj
@@ -31,8 +28,14 @@ if (isNaN(parseInt(obj.item_price)))
 else {
   price=parseInt(obj.item_price)
 }
+if (obj.itemimageurl=="0" || obj.itemimageurl=="" ) {
+url="https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png"
+}
+else {
+  url=obj.itemimageurl
+}
 document.getElementById("price"+itemn).value = price
-document.getElementById("itemimage"+itemn).src = obj.itemimageurl
+document.getElementById("itemimage"+itemn).src = url
 totalprice();
 obj=null
 }
@@ -52,6 +55,34 @@ function totalprice()
 }
 function validateform()
 {
+  var temp = new Array();
+  var arr = new Array()
+  var total=0;
+  temp = document.getElementById("itemnumber").value.split(",")
+  for (i=0; i<temp.length;i++)
+  {
+     arr[i]=JSON.parse(document.getElementById("item"+(i+1).toString()).value).itemid
+  }
+  //check if there are atleast 4 items selected. (itemid<>0)
+  //alert(JSON.stringify(arr))
+ count=0
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i]=="0"){
+      count=count+1
+    }
+  }
+  if (count>2){
+    alert('Please select atleast 4 items to complete the look')
+    return(false)
+  }
+ var sorted_arr = arr.slice().sort()
+ for (var i = 0; i < arr.length - 1; i++) {
+    if (sorted_arr[i + 1] == sorted_arr[i] && sorted_arr[i] != 0) {
+        alert('Cannot have duplicate items in a look.')
+        return (false)
+    }
+}
+
   if (document.getElementById("lookname").value =="")
   {
     alert ('Look name cannot be empty')
@@ -75,53 +106,74 @@ function submitform()
      <form id="category_form" method="post" action="/style545app/">
         {% csrf_token %}
        <div>
-         <p> Logged in Stylist: <label value="">{{ user.get_username }}</label>
-          <p> Look Name:  <input type="text" id="lookname" name="lookname" value="" length=50></input>
+         <p> Logged in Stylist: <label value="">{{ user.get_username }}</label></p>
+          <p> Look Name:  <input type="text" id="lookname" name="lookname" value="" length=50></input></p>
            <hr/>
-<p><input type="hidden" id="itemnumber" value="{{noofitems}}"/></p>
-  {%for i in noofitems%}
-    <p>Categories:
-      <select id="selectcategory-{{forloop.counter}}">
-      {% get_category_list %}
-    </select>
-    </p>
-         {% if items %}
-                 <p>Select Item&nbsp;<select name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
-                   {% for item in items %}
-                     <option value="{&quot;item_price&quot;:&quot;{{ item.item_price }}&quot;,&quot;id&quot;:&quot;{{ item.itemid}}&quot;,&quot;itemimageurl&quot;:&quot;{{ item.itemimageurl }}&quot;}">{{ item.item_name }}</option>
-                  {%endfor%}
-                 </select>
+           <div class="panel panel-default">
+             <div class="panel-heading">
+               <h3 class="panel-title">Select items</h3>
+             </div>
+             <div class="panel-body">
+                <p><input type="hidden" id="itemnumber" value="{{noofitems}}"/></p>
+                  {%for i in noofitems%}
+                    <p>Categories:
+                      <select id="selectcategory-{{forloop.counter}}">
+                      {% get_category_list 0 %}
+                    </select>
+                   </p>
 
-                 <img src=""  height="100" width="100"alt="" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
-                 <script>obj=JSON.parse(document.getElementById("item{{forloop.counter}}").value)
-                 document.getElementById("itemimage{{forloop.counter}}").src = obj.itemimageurl</script>
-                 <p>Price: <input type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true"></input></p>
-                 <script>if (isNaN(parseInt(obj.item_price))) {document.getElementById("price{{forloop.counter}}").value = 0} else {document.getElementById("price{{forloop.counter}}").value = obj.item_price }</script>
-                 <hr/>
-         {% else %}
-             <strong>There are no items present.</strong>
-         {% endif %}
+                     <p>Select Item&nbsp;<select name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
+                       <option></option>
+                     </select>
+
+                     <img src=""  height="100" width="100"alt="" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
+                     <p>Price: <input type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true"></input></p>
+                     <hr/>
+
   {%endfor%}
-
+</div>
+</div>
 
                <p>Total Look Price: <input type="text" name="total" id="total" disabled="true"></input></p>
                <hr/>
 
         {% if styles %}
-        <p>Pick Applicable Styles</p>
+        <div class="panel panel-default">
+          <div class="panel-heading"><strong>Pick Applicable Styles</strong></div>
+        </div>
          {% for style in styles %}
-          <input type="checkbox" name="stylescheck" id="stylescheck{{forloop.counter}}" value="{{ style.styleid }}">{{ style.stylename }}</input><br/>
+         <div class="row">
+           <div class="col-lg-6">
+             <div class="input-group">
+               <span class="input-group-addon">
+                 <input type="checkbox" name="stylescheck" id="stylescheck{{forloop.counter}}" value="{{ style.styleid }}"></input>
+               </span>
+             <input type="text" class="form-control"  value="{{ style.stylename }}">
+           </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div>
           {%endfor%}
         {% else %}
             <strong>There are no styles present.</strong>
         {% endif %}
-       </div>
+
        <hr/>
        <div>
        {% if occasions %}
-       <p>Pick Occasion Types</p>
+       <div class="panel panel-default">
+         <div class="panel-heading"><strong>Pick Occasions Types</strong></div>
+       </div>
         {% for occasion in occasions %}
-         <input type="checkbox" name="occasioncheck" id="occasioncheck{{forloop.counter}}" value="{{ occasion.occassionid }}">{{ occasion.occassion_name }}</input><br/>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group">
+              <span class="input-group-addon">
+         <input type="checkbox" name="occasioncheck" id="occasioncheck{{forloop.counter}}" value="{{ occasion.occassionid }}"></input>
+         </span>
+         <input type="text" class="form-control"  value="{{ occasion.occassion_name }}">
+         </div><!-- /input-group -->
+         </div><!-- /.col-lg-6 -->
+         </div>
          {%endfor%}
        {% else %}
            <strong>There are no occasions present.</strong>
@@ -130,18 +182,31 @@ function submitform()
       <hr/>
       <div>
       {% if body_list %}
-      <p>Pick Body Types</p>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Pick Body Types</strong></div>
+      </div>
        {% for bodytype in body_list %}
-        <input type="checkbox" name="bodytype" id="bodytype{{forloop.counter}}" value="{{ bodytype.id }}">{{ bodytype.bodytype }}</input><br/>
+       <div class="row">
+         <div class="col-lg-6">
+           <div class="input-group">
+             <span class="input-group-addon">
+        <input type="checkbox" name="bodytype" id="bodytype{{forloop.counter}}" value="{{ bodytype.id }}"></input>
+      </span>
+        <input type="text" class="form-control"  value="{{ bodytype.bodytype }}">
+        </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        </div>
         {%endfor%}
       {% else %}
           <strong>There are no body types present.</strong>
       {% endif %}
      </div>
-     <hr/>
+<hr/>
       <div>
       {% if budgets %}
-      <p>Pick Budget Types</p>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Pick Budget types</strong></div>
+      </div>
           <select name="budgettype" id="budgettype">
        {% for budget in budgets %}
           <option value="{{budget.budgetid}}">{{budget.budgetname}}</option>
@@ -154,4 +219,5 @@ function submitform()
      <hr/>
    <button class="btn btn-primary" type="button"  onclick="submitform()">Submit</button>
      </form>
+   </div>
 {% endblock %}

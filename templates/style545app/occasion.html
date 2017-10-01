@@ -1,0 +1,26 @@
+{% load style545_extras %}
+{% if occasionslist %}
+    {% for o in occasionslist %}
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="input-group">
+          <span class="input-group-addon">
+        <input  type="checkbox"  name="occasioncheck" id="occasioncheck{{forloop.counter}}" value="{{ o.occassionid }}"
+        {%if selectocclist%}
+          {% for s in selectocclist%}
+              {% ifequal s.occassionid o.occassionid%}
+                checked
+              {%endifequal%}
+            {% endfor %}
+        {%endif%}
+        ></span>
+        <input type="text" class="form-control" aria-label="" value="{{ o.occassion_name }}"></input>
+      </div><!-- /input-group -->
+      </div><!-- /.col-lg-6 -->
+      </div><!-- /.row -->
+    {% endfor %}
+
+{% else %}
+    <li> <strong >There are no occasions types present.</strong></li>
+
+{% endif %}

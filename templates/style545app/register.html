@@ -9,10 +9,13 @@
 {% block title %}Register User{% endblock %}
 
 {% block body_block %}
+<br/><br/>
 <h1>Register with Style545</h1>
 
         {% if registered %}
+        <div class="alert alert-success" role="alert">
         <strong>Thank you for registering!</strong>
+      </div>
         <a href="/Style545app/looks">Return to the homepage.</a><br />
         {% else %}
         <h2 class="form-signin-heading">Sign Up Here</h2>
@@ -23,7 +26,7 @@
             {% csrf_token %}
             {{ user_form|as_bootstrap }}
             <br/>
-            <button class="btn btn-primary" type="submit" value="Submit">Sign in</button>
+            <button class="btn btn-primary" type="submit" value="Submit">Submit</button>
 
 
          </form>

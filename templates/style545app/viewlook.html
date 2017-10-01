@@ -1,0 +1,230 @@
+{% extends 'style545app/base.html' %}
+{% load style545_extras %}
+{% load bootstrap_toolkit %}
+{% load staticfiles %}
+
+
+
+{% block title %}Looks{% endblock %}
+
+{% block body_block %}
+<script src="{% static "js/viewlook.js" %}"></script>
+<script>
+function getprice(price,itemn)
+{
+  var obj
+  try{
+   obj=JSON.parse(price)
+}
+catch (err)
+{
+  alert(err.message)
+}
+if (isNaN(parseInt(obj.item_price)))
+{
+  price=0
+}
+else {
+  price=parseInt(obj.item_price)
+}
+if (obj.itemimageurl=="0" || obj.itemimageurl=="" ) {
+url="https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png"
+}
+else {
+  url=obj.itemimageurl
+}
+document.getElementById("price"+itemn).value = price
+document.getElementById("itemimage"+itemn).src = url
+totalprice();
+obj=null
+}
+function totalprice()
+{
+  var temp = new Array();
+  var total=0;
+  temp = document.getElementById("itemnumber").value.split(",")
+  for (i=1; i<=temp.length;i++)
+  {
+    var currprice=parseInt(document.getElementById("price"+i.toString()).value)
+    if (!isNaN(currprice))
+    total=total+currprice;
+  }
+
+    document.getElementById("total").value =total
+}
+function getimageurl(url,itemn){
+  if (url=="0" || url==""){
+
+    url="https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png"
+  }
+  document.getElementById("itemimage"+itemn).src = url
+}
+function validateform()
+{
+  var temp = new Array();
+  var arr = new Array()
+  var total=0;
+  temp = document.getElementById("itemnumber").value.split(",")
+  for (i=0; i<temp.length;i++)
+  {
+     arr[i]=JSON.parse(document.getElementById("item"+(i+1).toString()).value).itemid
+  }
+  //check if there are atleast 4 items selected. (itemid<>0)
+  //alert(JSON.stringify(arr))
+ count=0
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i]=="0"){
+      count=count+1
+    }
+  }
+
+  if (count>2){
+    alert('Please select atleast 4 items to complete the look')
+    return(false)
+  }
+ var sorted_arr = arr.slice().sort()
+ //alert(JSON.stringify(sorted_arr))
+ for (var i = 0; i < arr.length - 1; i++) {
+    if (sorted_arr[i + 1] == sorted_arr[i] && sorted_arr[i] != 0) {
+        alert('Cannot have duplicate items in a look.')
+        return (false)
+    }
+}
+  if (document.getElementById("lookname").value =="")
+  {
+    alert ('Look name cannot be empty')
+    return (false)
+  }
+  else {
+    document.getElementById("editlook").submit()
+  }
+}
+
+
+</script>
+    <div class="page-header">
+                <h1>View Looks</h1>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Select look to edit</h3>
+      </div>
+      <div class="panel-body">
+        <form id="category_form" method="post" action="/style545app/viewlook/" class="navbar-form navbar-left">
+        <input type="hidden" id="itemnumber" value="{{noofitems}}"/>
+          {% csrf_token %}
+         <div>
+           <p> Logged in Stylist: <label value="">{{ user.get_username }}</label></p>
+           <p> Select Look: <select id="looklist" name="looklist">
+            {% get_looks_list %}
+            </select>
+            <button class="btn btn-primary" type="submit" value="Submit">Submit</button>
+            {%if look%}
+              {%for  l in look%}
+                <script>
+                  box=document.getElementById("looklist")
+                  for (var i = 0; i < box.options.length; i++) {
+                    if (box.options[i].value == {{l.lookid}}) {
+                          box.options[i].selected = true;
+                  }}
+                </script>
+              {%endfor%}
+            {%endif%}
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+{%for l in look%}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Edit look below &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" onclick="validateform()" class="btn btn-primary" value="Save Changes"/></h3>
+      </div>
+      <div class="panel-body">
+  <form id="editlook" method="post" action="/style545app/updatelook/" class="navbar-form navbar-left">
+      {% csrf_token %}
+
+<div>
+  <input type="hidden" id="lookid" name="lookid" value="{{l.lookid}}"</input>
+  <input type="hidden" id="itemnumber" name="itemnumber" value="{{noofitems}}"/>
+</div>
+
+
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon1"><strong>Look Name</strong></span>
+  <input class="form-control" size="50" type="text" id="lookname" name="lookname" value="{{l.lookname}}"></input>
+</div>
+<br/><br/>
+
+
+             <table class="table">
+              <tr>
+                <th>Category</th>
+                <th>Item Name</th>
+                <th>Picture</th>
+                <th>Price</th>
+              </tr>
+              {% for item in itemlist%}
+               <tr>
+                 <td>
+                   <select id="selectcategory-{{forloop.counter}}">
+                   {% get_category_list item.itemcategoryid%}
+                 </select>
+                 <br/><a href="javascript:removeitem({{forloop.counter}})">Remove item</a>
+                 </td>
+                 <td>
+                  <select name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
+                   {% get_item_list item.itemid item.itemcategoryid%}
+                 </select>
+               </td>
+
+                 <td> <img src="" id="itemimage{{forloop.counter}}" height="100" width="100"alt=""></td>
+                 <script>getimageurl({{item.itemimageurl}},{{forloop.counter}})</script>
+                 <td>  <input type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true" value="{{item.item_price}}"/></td>
+               </tr>
+              {%endfor%}
+              <tr><td/><td/><td><Strong>Total</Strong></td>
+                <td><input type="text" id="total" value="" disabled="true" </td>
+                <script>totalprice()</script>
+              </tr>
+      </table>
+          <table style="width:100%" border="0">
+           <tr>
+             <td>Body Type</td>
+             <td>
+               {%get_bodytypes_list boydtypelist %}
+                <hr/>
+             </td>
+           </tr>
+           <tr>
+           <td>Occasions</td>
+           <td>
+             {% get_occasions_list occasionslist%}
+              <hr/>
+           </td>
+         </tr>
+       <tr>
+       <td>Styles</td>
+       <td>
+         {% get_styles_list styleslist%}
+         <hr/>
+       </td>
+     </tr>
+     <tr>
+       <td>Budget</td>
+       <td>{% get_budget_list l.budgetid%}<hr/></td>
+     </tr>
+     <tr>
+       <td></td>
+       <td><input type="button" onclick="validateform()" class="btn btn-primary" value="Save Changes"/></td>
+     </tr>
+         </table>
+
+               </form>
+    {%endfor%}
+    <br/>
+  </div>
+  </div>
+
+{% endblock %}

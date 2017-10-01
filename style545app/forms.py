@@ -1,8 +1,11 @@
 from django import forms
 from style545app.models import Itemmaster
+from style545app.models import Looksmaster
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+
 
 
 class Itemselector(forms.Form):

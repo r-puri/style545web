@@ -12,10 +12,11 @@
 
 <form class="form-signin" role="form" method="post" action=".">
 {% csrf_token %}
-
+<br><br>
 <h2 class="form-signin-heading">Please sign in</h2>
 {% if authenticated == False %}
-<p class="text-danger">Login Failed </p>
+<p class="bg-danger"> <strong>Login Failed</strong>
+</p>
 {%endif%}
 <div class="form-group">
    <label for="id_username">User name</label>

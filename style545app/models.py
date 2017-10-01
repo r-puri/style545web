@@ -109,6 +109,16 @@ class Bodymaster(models.Model):
         managed = False
         db_table = 'BODYMASTER'
 
+class Vendormaster(models.Model):
+    id = models.IntegerField(db_column='idVENDORMASTER', primary_key=True)  # Field name made lowercase.
+    Vendorname = models.CharField(db_column='VendorName', max_length=100)  # Field name made lowercase.
+
+    def class_name(self):
+        return "%s"%(slugify(self.name))
+    class Meta:
+        managed = False
+        db_table = 'VENDORMASTER'
+
 
 class Itemmaster(models.Model):
     itemid = models.IntegerField(db_column='ItemID', primary_key=True)  # Field name made lowercase.
@@ -124,6 +134,8 @@ class Itemmaster(models.Model):
     likeitemid2 = models.CharField(db_column='LikeItemID2', max_length=10, blank=True)  # Field name made lowercase.
     item_inventory = models.IntegerField(db_column='Item_Inventory', blank=True, null=True)  # Field name made lowercase.
     itemcategoryid = models.IntegerField(db_column='ItemCategoryID', blank=True, null=True)  # Field name made lowercase.
+    item_size = models.IntegerField(db_column='Item_size', blank=True, null=True)  # Field name made lowercase.
+
 
     class Meta:
         managed = False
@@ -131,7 +143,7 @@ class Itemmaster(models.Model):
 
 
 class Looksmaster(models.Model):
-    #lookid = models.IntegerField(db_column='LookID', primary_key=True)  # Field name made lowercase.
+    lookid = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
     lookname = models.CharField(db_column='LookName', max_length=50)  # Field name made lowercase.
     custom_tag_bodytype1 = models.CharField(db_column='Custom_Tag_BodyType1', max_length=50, blank=True)  # Field name made lowercase.
     custom_tag_bodytype2 = models.CharField(db_column='Custom_Tag_BodyType2', max_length=50, blank=True)  # Field name made lowercase.

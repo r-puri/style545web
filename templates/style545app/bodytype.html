@@ -1,0 +1,26 @@
+{% load style545_extras %}
+{% if bodytypeslist %}
+    {% for b in bodytypeslist %}
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="input-group">
+          <span class="input-group-addon">
+        <input type="checkbox" name="bodytype" id="bodytype{{forloop.counter}}" value="{{ b.id }}"
+        {%if selectbodylist%}
+          {% for o in selectbodylist%}
+              {% ifequal b.id o.id%}
+                checked
+              {%endifequal%}
+            {% endfor %}
+        {%endif%}
+        ></input>
+    </span>
+        <input type="text" class="form-control" aria-label="" value="{{ b.bodytype }}"></input>
+      </div><!-- /input-group -->
+      </div><!-- /.col-lg-6 -->
+      </div><!-- /.row -->
+    {% endfor %}
+{% else %}
+    <li> <strong >There are no body types present.</strong></li>
+
+{% endif %}

@@ -1,9 +1,7 @@
 {% if items %}
-    <select id="selectitems">
     {% for i in items %}
-        <option value="{{i.itemid}}">{{i.item_name}}</option>
+         <option value="{&quot;item_price&quot;:&quot;{{ i.item_price }}&quot;,&quot;itemid&quot;:&quot;{{ i.itemid}}&quot;,&quot;itemimageurl&quot;:&quot;{{ i.itemimageurl }}&quot;}" {%ifequal i.itemid selecteditem%} selected {%endifequal%}>{{ i.item_name }}</option>
     {% endfor %}
-</select>
 {% else %}
     <li> <strong >There are no Items present.</strong></li>
 

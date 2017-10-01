@@ -29,6 +29,8 @@ LOGIN_URL = '/style545app/login/'
 
 
 # Application definition
+ROLEPERMISSIONS_MODULE = 'style545web.roles'
+
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -37,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles','style545app','bootstrap_toolkit',
+    'rolepermissions'
 )
 
 MIDDLEWARE_CLASSES = (

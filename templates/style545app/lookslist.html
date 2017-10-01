@@ -1,0 +1,9 @@
+{% load style545_extras %}
+{% if looks %}
+    {% for look in looks %}
+        <option value="{{look.lookid}}">{{look.lookname}}</option>
+    {% endfor %}
+{% else %}
+    <li> <strong >There are no looks present.</strong></li>
+
+{% endif %}

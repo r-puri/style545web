@@ -1,0 +1,11 @@
+{% load style545_extras %}
+{% if budgetlist %}
+  <select name="budgettype" id="budgettype">
+    {% for b in budgetlist %}
+     <option value="{{b.budgetid}}" {%ifequal b.budgetid selectedbudgetid%} selected {%endifequal%}>{{b.budgetname}} </option>
+    {% endfor %}
+  </select>
+{% else %}
+    <li> <strong >There are no budgets present.</strong></li>
+
+{% endif %}
