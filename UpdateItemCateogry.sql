@@ -4,7 +4,21 @@ Update ITEMMASTER, CategoryMaster
 Set ITEMMASTER.itemCategoryID = CategoryMaster.ID
 Where CategoryMaster.CategoryName=itemmaster.itemCategoryID;
 
-Select * from itemmaster
+--Update the urls
+Update ITEMMASTER
+Set ItemImageURL=Replace (ItemImageURL,'drive.google.com/open','docs.google.com/uc');
+
+--Update bad images
+Update ITEMMASTER set itemimageurl='0' where itemimageurl ='Y' or itemimageurl='No images available' or itemimageurl='No images online';
+
+--Update basic item
+Update ITEMMASTER  set itemimageurl='https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png'
+where itemid=0
+
+
+
+Select * from itemmaster where itemimageurl <> '0' 
+Update itemmaster set itemimageurl='https://lh3.googleusercontent.com/zPZo2WPNXMTaBbnnpB7VQdNc5L6fq4oO_7QSL1tDjMaocJJVB-PtZeuY8Z8wIYElerNqbQ6gLT-RaG4=w1804-h1352' where itemid=5979
 Select * from CategoryMaster
 
 Insert Into CategoryMaster (CategoryName)   (

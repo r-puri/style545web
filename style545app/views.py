@@ -25,6 +25,7 @@ from rolepermissions.roles import get_user_roles
 import datetime
 from django.db import connection
 from itertools import chain
+from django.db.models import Q
 
 
 
@@ -230,8 +231,8 @@ def getitemsbycat(request):
     print (datetime.datetime.now())
     if request.method == 'GET':
         cat_id = request.GET.get("category_id","")
-        item_list=Itemmaster.objects.all().filter(itemcategoryid=cat_id).values('itemid','item_name','item_price','itemimageurl').order_by('item_name')
-    print (datetime.datetime.now())
+        item_list=Itemmaster.objects.filter(itemcategoryid=cat_id).exclude(itemimageurl = '0').values('itemid','item_name','item_price','itemimageurl').order_by('item_name')
+
     return (JsonResponse({'results': list(item_list)}))
     #return HttpResponse(context_dict)
 
