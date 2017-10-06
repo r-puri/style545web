@@ -82,7 +82,7 @@ def viewlook(request):
              bodyidlist=[]
              if (len(look))==1:
                  for l in look:
-                     for x in range(6):
+                     for x in range(5):
                          itemid=getattr(l, "item"+str(x+1)+"id")
                          print(itemid)
                          if (isinstance(itemid,long)):
@@ -127,7 +127,7 @@ def viewlook(request):
                  fullitemslist = []
                  fullitemslist.extend(list(Itemmaster.objects.all().filter(itemid__in=lookitemlist).order_by('-itemid')))
                  print ('here2')
-                 while len(fullitemslist)<6:
+                 while len(fullitemslist)<5:
                      fullitemslist.extend(item0)
                  print (len(fullitemslist))
 

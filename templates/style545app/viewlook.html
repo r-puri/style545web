@@ -79,7 +79,7 @@ function validateform()
   }
 
   if (count>2){
-    alert('Please select atleast 4 items to complete the look')
+    alert('Please select atleast 3 items to complete the look')
     return(false)
   }
  var sorted_arr = arr.slice().sort()
@@ -115,10 +115,11 @@ function validateform()
           {% csrf_token %}
          <div>
            <p> Logged in Stylist: <label value="">{{ user.get_username }}</label></p>
-           <p> Select Look: <select id="looklist" name="looklist">
-            {% get_looks_list %}
-            </select>
+           <p> Select Look:
+            {% get_looks_list user.get_username %}
+
             <button class="btn btn-primary" type="submit" value="Submit">Submit</button>
+
             {%if look%}
               {%for  l in look%}
                 <script>
@@ -157,40 +158,58 @@ function validateform()
 </div>
 <br/><br/>
 
+  <table class="table">
+   <tr>
+     <th>Items</th>
+     <th>Picture</th>
+   </tr>
+     {% for item in itemlist%}
+   <tr>
+     <td>
+       <div class="input-group">
+         <span class="input-group-addon" style="min-width:75px;text-align:left" id="basic-addon1" for="emailtemplate" >Categories</span>
+         <select id="selectcategory-{{forloop.counter}}" class="form-control" aria-describedby="basic-addon1">
+         {% get_category_list item.itemcategoryid%}
+       </select>
+     </div><!--Input group--><br/>
+      <div class="input-group">
+        <span class="input-group-addon" style="min-width:90px;text-align:left" id="basic-addon1" for="emailtemplate" >Item {{forloop.counter}}</span>
+        <select class="form-control" name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
+         {% get_item_list item.itemid item.itemcategoryid%}
+       </select>
+     </div><!--Input group--><br/>
+     <div class="input-group">
+      <button type="button" class="btn btn-primary btn-xs " onclick="javascript:removeitem({{forloop.counter}})">Remove Item</button>
+     </div><!--Input group-->
+      <br/>
 
-             <table class="table">
-              <tr>
-                <th>Items</th>
-                <th>Category</th>
-                <th>Item Name</th>
-                <th>Picture</th>
-                <th>Price</th>
-              </tr>
-              {% for item in itemlist%}
-               <tr>
-                 <td> Item{{forloop.counter}} </td>
-                 <td>
-                   <select id="selectcategory-{{forloop.counter}}">
-                   {% get_category_list item.itemcategoryid%}
-                 </select>
-                 <br/><a href="javascript:removeitem({{forloop.counter}})">Remove item</a>
-                 </td>
-                 <td>
-                  <select name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
-                   {% get_item_list item.itemid item.itemcategoryid%}
-                 </select>
-               </td>
+      <!--<a href="javascript:removeitem({{forloop.counter}})">Remove item</a>-->
 
-                 <td> <img src="" id="itemimage{{forloop.counter}}" height="100" width="100"alt=""></td>
-                 <script>getimageurl({{item.itemimageurl}},{{forloop.counter}})</script>
-                 <td>  <input type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true" value="{{item.item_price}}"/></td>
-               </tr>
-              {%endfor%}
-              <tr><td/><td/><td><Strong>Total</Strong></td>
-                <td><input type="text" id="total" value="" disabled="true" </td>
-                <script>totalprice()</script>
-              </tr>
-      </table>
+     <br/>
+     <div class="input-group">
+       <span class="input-group-addon" style="min-width:90px;text-align:left" id="basic-addon1" for="emailtemplate" >Price</span>
+       <input class="form-control" type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true" value="{{item.item_price}}"/>
+     </div><!--Input group-->
+
+     </td>
+     <td>
+       <a href="#" class="thumbnail">
+         <img src="" height="150" width="150"id="itemimage{{forloop.counter}}" alt=""></td>
+         <script>getimageurl('{{item.itemimageurl}}','{{forloop.counter}}')</script>
+       </a>
+     </td>
+   </tr>
+
+   {%endfor%}
+   <tr>
+     <td><Strong>Total</Strong>
+     <input type="text" id="total" value="" disabled="true">
+     <script>totalprice()</script>
+     </td>
+     <td/>
+   </tr>
+</table>
+
           <table style="width:100%" border="0">
            <tr>
              <td>Body Type</td>

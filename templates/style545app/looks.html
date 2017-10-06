@@ -72,7 +72,7 @@ function validateform()
     }
   }
   if (count>2){
-    alert('Please select atleast 4 items to complete the look')
+    alert('Please select atleast 3 items to complete the look')
     return(false)
   }
  var sorted_arr = arr.slice().sort()
@@ -146,7 +146,7 @@ function submitform()
                   </td>
                   <td>
                     <a href="#" class="thumbnail">
-                       <img src="" alt="" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
+                       <img src="" alt="" height="150" width="150" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
                     </a>
                   </td>
                 </tr>

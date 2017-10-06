@@ -26,8 +26,11 @@ def get_item_list_by_cat(selectedid):
     return {'items': Itemmaster.objects.all().filter(itemcategoryid=selectedid)}
 
 @register.inclusion_tag('style545app/lookslist.html')
-def get_looks_list():
-    return {'looks': Looksmaster.objects.all()}
+def get_looks_list(username):
+    if (username == 'rpuri' or username=='dgulati'):
+        return {'looks': Looksmaster.objects.all()}
+    else:
+        return {'looks': Looksmaster.objects.all().filter(look_stylist=username)}
 
 @register.inclusion_tag('style545app/bodytype.html')
 def get_bodytypes_list(selectbodylist):
