@@ -160,6 +160,7 @@ function validateform()
 
              <table class="table">
               <tr>
+                <th>Items</th>
                 <th>Category</th>
                 <th>Item Name</th>
                 <th>Picture</th>
@@ -167,6 +168,7 @@ function validateform()
               </tr>
               {% for item in itemlist%}
                <tr>
+                 <td> Item{{forloop.counter}} </td>
                  <td>
                    <select id="selectcategory-{{forloop.counter}}">
                    {% get_category_list item.itemcategoryid%}

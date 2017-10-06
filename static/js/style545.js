@@ -43,6 +43,13 @@ $(document).ready(function() {
                                 .text(item.item_name)
                                 .val(JSON.stringify(item)))
              });
+             value=$("#item"+itemnumber).eq(0).val() ; getprice(value,itemnumber)   ;
+             //set default image
+             url=JSON.parse(value)["itemimageurl"];
+             if (url == "0") {
+               url="https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png";
+             }
+             $("#itemimage"+itemnumber).attr('src',url);
          });
        });
        });

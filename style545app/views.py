@@ -26,6 +26,7 @@ import datetime
 from django.db import connection
 from itertools import chain
 from django.db.models import Q
+from django.db.models import Max, Min
 
 
 
@@ -231,16 +232,25 @@ def getitemsbycat(request):
     print (datetime.datetime.now())
     if request.method == 'GET':
         cat_id = request.GET.get("category_id","")
-        item_list=Itemmaster.objects.filter(itemcategoryid=cat_id).exclude(itemimageurl = '0').values('itemid','item_name','item_price','itemimageurl').order_by('item_name')
-
-    return (JsonResponse({'results': list(item_list)}))
+        #item_list=Itemmaster.objects.filter(itemcategoryid=cat_id).exclude(itemimageurl = '0').values('itemid','item_name','item_price','itemimageurl').order_by('item_name')
+    #q = Itemmaster.objects.filter(
+    # itemid__in=Itemmaster.objects.values('item_name')
+    #                            .distinct()
+    #                            .values_list('itemid', flat=True)).values('itemid','item_name','item_price','itemimageurl')
+    # print list(q)
+    #q=Itemmaster.objects.values('item_name').distinct().values('itemid')
+    q1 = Itemmaster.objects.values('item_name').distinct().filter(item_inventory__gt=0).annotate(x=Max('itemid'))
+    q2 = Itemmaster.objects.filter(itemid__in=[i["x"] for i in q1],itemcategoryid=cat_id).values('item_inventory','itemid','item_name','item_price','itemimageurl').order_by('item_name')
+    #print (q2)
+    # print (len(list(q)))
+    return (JsonResponse({'results': list(q2)}))
     #return HttpResponse(context_dict)
 
 def lookconfirm(request):
      return render(request,'style545app/lookconfirm.html')
 def index(request):
     #NumberofItems={} # Minimum number of items of a look
-     number_of_items_list=6
+     number_of_items_list=5
      if  not request.user.is_authenticated():
          return HttpResponseRedirect('/style545app/login/')
      if request.method == 'POST':

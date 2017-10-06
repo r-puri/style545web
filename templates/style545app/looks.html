@@ -113,24 +113,45 @@ function submitform()
              <div class="panel-heading">
                <h3 class="panel-title">Select items</h3>
              </div>
+             <p><input type="hidden" id="itemnumber" value="{{noofitems}}"/></p>
+
              <div class="panel-body">
-                <p><input type="hidden" id="itemnumber" value="{{noofitems}}"/></p>
-                  {%for i in noofitems%}
-                    <p>Categories:
-                      <select id="selectcategory-{{forloop.counter}}">
+               <table class="table">
+                <tr>
+                  <th>Items</th>
+                  <th>Picture</th>
+                </tr>
+              {%for i in noofitems%}
+                <tr>
+                  <td>
+                    <div class="input-group">
+                      <span class="input-group-addon" style="min-width:75px;text-align:left" id="basic-addon1" for="emailtemplate" >Categories</span>
+                      <select class="form-control"  id="selectcategory-{{forloop.counter}}" aria-describedby="basic-addon1">
                       {% get_category_list 0 %}
-                    </select>
-                   </p>
+                      </select>
+                      </div><!--Input group-->
+                      <div class="input-group">
+                        <span class="input-group-addon" style="min-width:90px;text-align:left" id="basic-addon1" for="emailtemplate" >Item {{forloop.counter}}:</span>
+                        <select class="form-control" name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
+                        <option></option>
+                      </select>
+                      </div><!--Input group-->
+                      <br/>
+                      <div class="input-group">
+                        <span class="input-group-addon" style="min-width:90px;text-align:left" id="basic-addon1" for="emailtemplate" >Price</span>
+                        <input class="form-control" type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true"></input>
+                      </div><!--Input group-->
 
-                     <p>Select Item&nbsp;<select name="item{{forloop.counter}}" id="item{{forloop.counter}}" onchange="getprice(this.value,{{forloop.counter}})">
-                       <option></option>
-                     </select>
 
-                     <img src=""  height="100" width="100"alt="" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
-                     <p>Price: <input type="text" name="price{{forloop.counter}}" id="price{{forloop.counter}}" disabled="true"></input></p>
-                     <hr/>
-
+                  </td>
+                  <td>
+                    <a href="#" class="thumbnail">
+                       <img src="" alt="" name="itemimage{{forloop.counter}}" id="itemimage{{forloop.counter}}" >
+                    </a>
+                  </td>
+                </tr>
   {%endfor%}
+</table>
 </div>
 </div>
 
