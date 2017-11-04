@@ -28,7 +28,7 @@ else {
   price=parseInt(obj.item_price)
 }
 if (obj.itemimageurl=="0" || obj.itemimageurl=="" ) {
-url="https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png"
+url="{% static "images/logo.png" %}"
 }
 else {
   url=obj.itemimageurl
@@ -55,7 +55,7 @@ function totalprice()
 function getimageurl(url,itemn){
   if (url=="0" || url==""){
 
-    url="https://storage.googleapis.com/wzukusers/user-29032408/images/595d35dcaad07y65ba2d/Screen-Shot-2017-07-05-at-1.53.49-PM_d400.png"
+    url="{% static "images/logo.png" %}"
   }
   document.getElementById("itemimage"+itemn).src = url
 }
@@ -194,7 +194,7 @@ function validateform()
      </td>
      <td>
        <a href="#" class="thumbnail">
-         <img src="" height="150" width="150"id="itemimage{{forloop.counter}}" alt=""></td>
+         <img class="loading" src="" height="150" width="150"id="itemimage{{forloop.counter}}" alt=""></td>
          <script>getimageurl('{{item.itemimageurl}}','{{forloop.counter}}')</script>
        </a>
      </td>

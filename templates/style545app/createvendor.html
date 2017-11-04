@@ -1,0 +1,54 @@
+{% extends 'style545app/base.html' %}
+
+{% load style545_extras %}
+
+{% load staticfiles %}
+
+
+{% block title %}Looks{% endblock %}
+
+{% block body_block %}
+<script>
+function submitform(){
+  if document.getElementById("VendorName").value==""{
+    alert('Enter Vendor Name')
+    return false
+  }
+  document.getElementById("survey").submit()
+}
+</script>
+<div class="page-header">
+            <h1 >Create Vendor</h1>
+            <p>Create a new Vendor</p>
+</div>
+{%if post%}
+{% if created %}
+<div class="alert alert-success" role="alert">
+<strong>Vendor Created</strong>
+</div>
+{% else %}
+<div class="alert alert-danger" role="alert">
+<strong>{{Message}}</strong>
+</div>
+{%endif%}
+{%endif%}
+<form name="survey" id="survey" method="POST" action="/style545app/createvendor">
+  <div class="row col-md-8">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Create Vendor</h3>
+    </div>
+    <div class="panel-body">
+    {% csrf_token %}
+    <div class="form-group">
+       <label>Vendor name</label>
+       <input class="form-control" placeholder="Vendor Name" id="VendorName" maxlength="100" name="VendorName" type="text" required autofocus=""/>
+    </div>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit" value="Submit" >Create Vendor</button>
+      </div>
+      </div><!--Body-->
+    </div><!--Panel-->
+  </div><!--row-->
+</form>
+{% endblock %}

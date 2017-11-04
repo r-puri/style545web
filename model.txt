@@ -54,6 +54,15 @@ class Algoresults090620172(models.Model):
         db_table = 'ALGORESULTS_09062017_2'
 
 
+class Bodymaster(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    bodytype = models.CharField(db_column='Bodytype', max_length=45)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'BODYMASTER'
+
+
 class Budgetmaster(models.Model):
     budgetid = models.IntegerField(db_column='BudgetID', primary_key=True)  # Field name made lowercase.
     budgetname = models.CharField(db_column='BudgetName', max_length=50)  # Field name made lowercase.
@@ -65,19 +74,33 @@ class Budgetmaster(models.Model):
         db_table = 'BUDGETMASTER'
 
 
+class Categorymaster(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    categoryname = models.CharField(db_column='CategoryName', max_length=200)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'CATEGORYMASTER'
+
+
 class Customermaster(models.Model):
     customerid = models.IntegerField(db_column='CustomerID', primary_key=True)  # Field name made lowercase.
     customer_name = models.CharField(db_column='Customer_Name', max_length=50)  # Field name made lowercase.
     customer_email = models.CharField(db_column='Customer_Email', max_length=50, blank=True)  # Field name made lowercase.
     customer_dob = models.CharField(db_column='Customer_DOB', max_length=50, blank=True)  # Field name made lowercase.
-    customer_age = models.IntegerField(db_column='Customer_Age', blank=True, null=True)  # Field name made lowercase.
-    customer_size1id = models.IntegerField(db_column='Customer_Size1ID', blank=True, null=True)  # Field name made lowercase.
-    customer_size2id = models.IntegerField(db_column='Customer_Size2ID', blank=True, null=True)  # Field name made lowercase.
+    customer_age = models.CharField(db_column='Customer_Age', max_length=100, blank=True)  # Field name made lowercase.
+    customer_topsize = models.CharField(db_column='Customer_TopSize', max_length=100, blank=True)  # Field name made lowercase.
+    customer_dresssize = models.CharField(db_column='Customer_DressSize', max_length=100, blank=True)  # Field name made lowercase.
     customer_current_occid = models.IntegerField(db_column='Customer_Current_OccID')  # Field name made lowercase.
     customer_current_styleid = models.IntegerField(db_column='Customer_Current_StyleID')  # Field name made lowercase.
     customer_current_budgetid = models.IntegerField(db_column='Customer_Current_BudgetID')  # Field name made lowercase.
     customer_bodytype = models.CharField(db_column='Customer_BodyType', max_length=50, blank=True)  # Field name made lowercase.
     customer_actual_budget = models.IntegerField(db_column='Customer_Actual_Budget', blank=True, null=True)  # Field name made lowercase.
+    customer_pantsize = models.CharField(db_column='Customer_PantSize', max_length=100, blank=True)  # Field name made lowercase.
+    customer_celebrity_closet = models.CharField(db_column='Customer_Celebrity_Closet', max_length=100, blank=True)  # Field name made lowercase.
+    customer_comments = models.CharField(db_column='Customer_Comments', max_length=200, blank=True)  # Field name made lowercase.
+    customer_current_styleid_secondary = models.IntegerField(db_column='Customer_Current_StyleID_Secondary', blank=True, null=True)  # Field name made lowercase.
+    surveyid = models.ForeignKey('Surveymaster', db_column='SurveyID', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -110,14 +133,38 @@ class Itemmaster(models.Model):
     likeitemid1 = models.CharField(db_column='LikeItemID1', max_length=10, blank=True)  # Field name made lowercase.
     likeitemid2 = models.CharField(db_column='LikeItemID2', max_length=10, blank=True)  # Field name made lowercase.
     item_inventory = models.IntegerField(db_column='Item_Inventory', blank=True, null=True)  # Field name made lowercase.
+    itemimageurl = models.CharField(db_column='ItemImageURL', max_length=4000, blank=True)  # Field name made lowercase.
+    itemcategoryid = models.IntegerField(db_column='ItemCategoryID', blank=True, null=True)  # Field name made lowercase.
+    item_size = models.CharField(db_column='Item_size', max_length=45, blank=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'ITEMMASTER'
 
 
+class ItemmasterBk1(models.Model):
+    itemid = models.IntegerField(db_column='ItemID', primary_key=True)  # Field name made lowercase.
+    item_name = models.CharField(db_column='Item_Name', max_length=50, blank=True)  # Field name made lowercase.
+    item_desc = models.CharField(db_column='Item_Desc', max_length=4000, blank=True)  # Field name made lowercase.
+    item_designer = models.CharField(db_column='Item_Designer', max_length=4000, blank=True)  # Field name made lowercase.
+    itemurl = models.CharField(db_column='ItemURL', max_length=4000, blank=True)  # Field name made lowercase.
+    item_price = models.IntegerField(db_column='Item_Price', blank=True, null=True)  # Field name made lowercase.
+    item_sku = models.IntegerField(db_column='Item_SKU', blank=True, null=True)  # Field name made lowercase.
+    item_color = models.CharField(db_column='Item_Color', max_length=50, blank=True)  # Field name made lowercase.
+    likeitemid1 = models.CharField(db_column='LikeItemID1', max_length=10, blank=True)  # Field name made lowercase.
+    likeitemid2 = models.CharField(db_column='LikeItemID2', max_length=10, blank=True)  # Field name made lowercase.
+    item_inventory = models.IntegerField(db_column='Item_Inventory', blank=True, null=True)  # Field name made lowercase.
+    itemimageurl = models.CharField(db_column='ItemImageURL', max_length=4000, blank=True)  # Field name made lowercase.
+    itemcategoryid = models.IntegerField(db_column='ItemCategoryID', blank=True, null=True)  # Field name made lowercase.
+    item_size = models.CharField(db_column='Item_size', max_length=45, blank=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'ITEMMASTER_bk1'
+
+
 class Looksmaster(models.Model):
-    lookid = models.IntegerField(db_column='LookID', primary_key=True)  # Field name made lowercase.
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
     lookname = models.CharField(db_column='LookName', max_length=50)  # Field name made lowercase.
     custom_tag_bodytype1 = models.CharField(db_column='Custom_Tag_BodyType1', max_length=50, blank=True)  # Field name made lowercase.
     custom_tag_bodytype2 = models.CharField(db_column='Custom_Tag_BodyType2', max_length=50, blank=True)  # Field name made lowercase.
@@ -185,6 +232,27 @@ class Stylemaster(models.Model):
     class Meta:
         managed = False
         db_table = 'STYLEMASTER'
+
+
+class Surveymaster(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    surveyname = models.CharField(db_column='SurveyName', max_length=100)  # Field name made lowercase.
+    vendorid = models.ForeignKey('Vendormaster', db_column='VendorID')  # Field name made lowercase.
+    createddate = models.DateTimeField(db_column='CreatedDate')  # Field name made lowercase.
+    surveykey = models.CharField(db_column='SurveyKey', max_length=45, blank=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'SURVEYMASTER'
+
+
+class Vendormaster(models.Model):
+    idvendormaster = models.IntegerField(db_column='idVENDORMASTER', primary_key=True)  # Field name made lowercase.
+    vendorname = models.CharField(db_column='VendorName', unique=True, max_length=100)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'VENDORMASTER'
 
 
 class AuthGroup(models.Model):
@@ -330,3 +398,19 @@ class RegistrationSupervisedregistrationprofile(models.Model):
     class Meta:
         managed = False
         db_table = 'registration_supervisedregistrationprofile'
+
+
+class Style545AppMymodel(models.Model):
+    id = models.IntegerField(primary_key=True)  # AutoField?
+
+    class Meta:
+        managed = False
+        db_table = 'style545app_mymodel'
+
+
+class Temp(models.Model):
+    itemid = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'temp'

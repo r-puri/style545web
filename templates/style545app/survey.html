@@ -1,0 +1,419 @@
+{% extends 'style545app/base.html' %}
+
+{% load style545_extras %}
+
+{% load staticfiles %}
+
+
+{% block title %}Looks{% endblock %}
+
+{% block body_block %}
+<script src="{% static "js/survey.js" %}"></script>
+<style type="text/css">
+.input-group-addon.primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(50, 118, 177);
+    border-color: rgb(40, 94, 142);
+}
+.input-group-addon.success {
+    color: rgb(255, 255, 255);
+    background-color: rgb(92, 184, 92);
+    border-color: rgb(76, 174, 76);
+}
+.input-group-addon.info {
+    color: rgb(255, 255, 255);
+    background-color: rgb(57, 179, 215);
+    border-color: rgb(38, 154, 188);
+}
+.input-group-addon.warning {
+    color: rgb(255, 255, 255);
+    background-color: rgb(240, 173, 78);
+    border-color: rgb(238, 162, 54);
+}
+.danger {
+    color: rgb(255, 255, 255);
+    background-color: rgb(217, 83, 79);
+    border-color: rgb(212, 63, 58);
+}
+
+
+
+.stepwizard-step p {
+    margin-top: 10px;
+}
+
+.stepwizard-row {
+    display: table-row;
+}
+
+.stepwizard {
+    display: table;
+    width: 100%;
+    position: relative;
+}
+
+.stepwizard-step button[disabled] {
+    opacity: 1 !important;
+    filter: alpha(opacity=100) !important;
+}
+
+.stepwizard-row:before {
+    top: 14px;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    z-order: 0;
+
+}
+
+.stepwizard-step {
+    display: table-cell;
+    text-align: center;
+    position: relative;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+</style>
+<script>
+function changeceleb()
+{
+  value=document.getElementById("celeb").value
+  switch(value) {
+    case "Jenifer Lopez":
+        document.getElementById("celebimage").src="{%static "images/jlo.jpg"%}"
+        break;
+    case "Kate Middleton":
+        document.getElementById("celebimage").src="{%static "images/kate.jpg"%}"
+        break;
+    case "Diane Keaton":
+        document.getElementById("celebimage").src="{%static "images/diane.jpg"%}"
+        break;
+    case "Victoria Beckham":
+        document.getElementById("celebimage").src="{%static "images/becks.jpg"%}"
+        break;
+    case "Gwen Stefani":
+        document.getElementById("celebimage").src="{%static "images/gwen.jpg"%}"
+        break;
+    default:
+      document.getElementById("celebimage").src="{%static "images/kate.jpg"%}"
+  }
+}
+function submitform()
+{
+  if (document.getElementById("validate-email").value =="")
+  {
+    alert ('Please provide us with your email address')
+    document.getElementById("validate-email").focus()
+    return (false)
+  }
+  if (document.getElementById("validate-text").value =="")
+  {
+    alert ('Please provide us with your name')
+    document.getElementById("validate-text").focus()
+    return (false)
+  }
+    document.getElementById("survey").submit()
+
+}
+</script>
+
+<div class="page-header">
+            <h1 >Style quiz</h1>
+            <p style="color:9400D3;">SHOP + Style545 are partnering to offer a revoluationary shopping experience!</p>
+</div>
+
+<form name="survey" id="survey" method="POST" action="/style545app/survey">
+    {% csrf_token %}
+    <input name="surveyid" id="surveyid" type="hidden" value="{{request.GET.s}}"/>
+
+<div class="container">
+  <div class="row">
+  <div class="col-md-8">
+  <div class="stepwizard">
+    <div class="stepwizard-row setup-panel">
+        <div class="stepwizard-step">
+            <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+            <p>Step 1</p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+            <p>Step 2</p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+            <p>Step 3</p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+            <p>Step 4</p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+            <p>Step 5</p>
+        </div>
+    </div>
+</div>
+</div>
+</div><!--row-->
+  <div class="row">
+    <div class="col-md-8">
+  <div class="row setup-content" id="step-1">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Step 1 of 5: Basic Information</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <input type="text" class="form-control" name="validate-text" id="validate-text" placeholder="Your name (required)" required>
+      </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="validate-email" id="validate-email" placeholder=" Email Address (required)" required>
+      </div>
+          <div class="form-group">
+            <Input class="form-control" name="zipcode" id="zipcode" aria-describedby="basic-addon1" type="text" placeholder="Your Zipcode"></input>
+          </div><!--Input group-->
+          <div class="form-group">
+            <label for="validate-text">Age Range</label>
+            <div class="radio">
+              <label><input type="radio" name="radioage" value="18-25">18-25</label>
+            </div>
+            <div class="radio">
+              <label><input type="radio" name="radioage" value="26-35" checked>26-35</label>
+            </div>
+              <div class="radio">
+              <label><input type="radio" name="radioage" value="36-50">36-50</label>
+            </div>
+             <div class="radio">
+              <label><input type="radio" name="radioage" value="50+">50+</label>
+            </div>
+          </div><!--Input group-->
+          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+      </div><!-- panel body-->
+    </div><!--Panel default-->
+  </div><!--Row setup contenct-->
+  <div class="row setup-content" id="step-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Step 2 of 5: Sizes</h3>
+      </div>
+
+      <div class="panel-body">
+        <div class="form-group">
+                 <label for="validate-select">What's your top size?</label>
+              <div class="input-group">
+                <Select class="form-control"  name="topsize" id="topsize" aria-describedby="basic-addon1" type="text">
+                <option value="XS(0)">XS(0)</option>
+                <option value="S(2-4)">S(2-4)</option>
+                <option value="M(6-8)">M(6-8)</option>
+                <option value="L(10-12)">L(10-12)</option>
+                <option value="XL(14)">S(14)</option>
+              </select>
+            </div>
+          </div><!--from group-->
+          <div class="form-group">
+                   <label for="validate-select">What's your dress size?</label>
+                <div class="input-group">
+            <Select class="form-control"  name="dresssize" id="dresssize" aria-describedby="basic-addon1" type="text">
+              <option value="XS(0)">XS(0)</option>
+              <option value="S(2-4)">S(2-4)</option>
+              <option value="M(6-8)">M(6-8)</option>
+              <option value="L(10-12)">L(10-12)</option>
+              <option value="XL(14)">S(14)</option>
+            </select>
+          </div>
+          </div><!--Input group-->
+          <div class="form-group">
+                   <label for="validate-select">What's your pant size?</label>
+          <div class="input-group">
+            <Select class="form-control" name="pantsize" id="pantsize" aria-describedby="basic-addon1" type="text">
+              <option value="2(S)">2(S)</option>
+              <option value="4(S)">4(S)</option>
+              <option value="6(M)">6(M)</option>
+              <option value="8(M)">8(M)</option>
+              <option value="10(L)">10(L)</option>
+              <option value="12(L)">12(L)</option>
+
+
+            </select>
+          </div><!--Input group-->
+        </div>
+        <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+
+      </div><!-- panel body-->
+    </div><!--Panel default-->
+  </div><!--row setup conent-->
+  <div class="row setup-content" id="step-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Step 3 of 5: Body Shape</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+                 <label for="validate-select">What's your body type?</label>
+        <div class="input-group">
+          <img src="{%static "images/bodytype.png"%}">
+          {%if body_list%}
+          <Select class="form-control"  name="bodytype" id="bodytype" aria-describedby="basic-addon1">
+            {%for b in body_list%}
+                <option value="{{b.bodytype}}">{{b.bodytype}}</option>
+              {%endfor%}
+            </select>
+            {%endif%}
+        </div><!--Input group-->
+      </div><!-- input group-->
+      <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+      </div><!-- panel body-->
+    </div><!--Panel default-->
+  </div><!-- row setup content-->
+  <div class="row setup-content" id="step-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Step 4 of 5: Budget</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+                 <label for="validate-select">What's your top budget?</label>
+        <div class="input-group">
+          <Select class="form-control"  name="budgettop" id="budgettop" aria-describedby="basic-addon1" type="text">
+            <option value="50"><$50</option>
+            <option value="50-100">$50-100</option>
+            <option value="100-200">$100-200</option>
+            <option value="200">$200+</option>
+          </select>
+        </div><!--Input group-->
+      </div>
+        <div class="form-group">
+                 <label for="validate-select">What's your pants budget?</label>
+        <div class="input-group">
+          <Select class="form-control"  name="budgetpants" id="budgetpants" aria-describedby="basic-addon1" type="text">
+            <option value="50"><$50</option>
+            <option value="50-100">$50-100</option>
+            <option value="100-200">$100-200</option>
+            <option value="200">$200+</option>
+          </select>
+        </div><!--Input group-->
+      </div>
+        <div class="form-group">
+                 <label for="validate-select">What's your dress budget?</label>
+        <div class="input-group">
+          <Select class="form-control"  name="budgetdress"  id="budgetdress" aria-describedby="basic-addon1" type="text">
+            <option value="50"><$50</option>
+            <option value="50-100">$50-100</option>
+            <option value="100-200">$100-200</option>
+            <option value="200">$200+</option>
+          </select>
+        </div><!--Input group-->
+      </div>
+        <div class="form-group">
+                 <label for="validate-select">What's your accessory budget?</label>
+        <div class="input-group">
+          <Select class="form-control"  name="budgetaccessory" id="budgetaccessory" aria-describedby="basic-addon1" type="text">
+            <option value="50"><$50</option>
+            <option value="50-100">$50-100</option>
+            <option value="100-200">$100-200</option>
+            <option value="200">$200+</option>
+          </select>
+        </div><!--Input group-->
+      </div>
+        <div class="form-group">
+                 <label for="validate-select">What's your outerwear budget?</label>
+        <div class="input-group">
+          <Select class="form-control"  name="budgetouterwear" id="budgetouterwear" aria-describedby="basic-addon1" type="text">
+            <option value="50"><$50</option>
+            <option value="50-100">$50-100</option>
+            <option value="100-200">$100-200</option>
+            <option value="200">$200+</option>
+          </select>
+        </div><!--Input group-->
+        <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+      </div>
+      </div><!-- panel body-->
+    </div><!--Panel default-->
+  </div><!--Row setup content-->
+  <div class="row setup-content" id="step-5">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Step 5 of 5: Style Preference</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="validate-text">What's the occasion you are shopping for today?</label>
+          {% if occasion_list %}
+              {% for o in occasion_list %}
+              <div class="radio">
+                  <label><input name="radioocc" type="radio" name="radioocc" value="{{ o.occassionid }}" {% ifequal forloop.counter 1%} checked {%endifequal%}>{{ o.occassion_name}}</label>
+              </div>
+              {%endfor%}
+          {%endif%}
+        </div>
+
+        <div class="form-group">
+          <label for="validate-text">What two styles best describe you?</label>
+            <div class="input-group">
+            {% if styles_list %}
+                {% for o in styles_list %}
+                <div class="checkbox">
+                    <label><input name="checkboxstyle" type="checkbox" id="checkboxstyle{{forloop.counter}}" value="{{ o.styleid }}" {% ifequal forloop.counter 1%} checked {%endifequal%}>{{ o.stylename}} </input></label>
+                </div>
+                {%endfor%}
+            {%endif%}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="validate-text">If you could choose a celebrity closet, who's would you choose?</label>
+
+            <table width="">
+              <tr>
+                <td>
+                  <select id="celeb" name="celeb" onchange="changeceleb()">
+                    <option value="Kate Middleton">Kate Middleton</option>
+                    <option value="Jenifer Lopez">Jenifer Lopez</option>
+                    <option value="Victoria Beckham">Victoria Beckham</option>
+                    <option value="Gwen Stefani">Gwen Stefani</option>
+                    <option value="Diane Keaton">Diane Keaton</option>
+                  </select>
+                </td>
+                <td>&nbsp;</td>
+                <td style="align:right">
+                  <img id="celebimage" style="width:150px;height:200px;" src="{%static "images/kate.jpg"%}">
+                </td>
+              </tr>
+
+          </table>
+
+          </div>
+      </div><!-- panel body-->
+    </div><!--Panel default-->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Comments</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="validate-text">Are there any problem areas you would like to tell us about?</label>
+            <div class="input-group">
+            <div class="form-group">
+              <textarea class="form-control" name="comments" rows="5" cols="50" id="comments"></textarea>
+            </div>
+          </div><!--Input group-->
+      </div><!-- panel body-->
+      <button class="btn btn-success" type="button"  onclick="submitform()">Finish!</button>
+    </div><!--Panel default-->
+  </div><!--row setup content-->
+  </div>
+</div>
+</div>
+</form>
+{%endblock%}

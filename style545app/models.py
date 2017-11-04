@@ -68,20 +68,36 @@ class Budgetmaster(models.Model):
         managed = False
         db_table = 'BUDGETMASTER'
 
+class Surveymaster(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    surveyname = models.CharField(db_column='SurveyName', max_length=100)  # Field name made lowercase.
+    vendorid = models.ForeignKey('Vendormaster', db_column='VendorID')  # Field name made lowercase.
+    createddate = models.DateTimeField(db_column='CreatedDate')  # Field name made lowercase.
+    surveykey = models.CharField(db_column='SurveyKey', max_length=45, blank=True)  # Field name made lowercase.
+
+
+    class Meta:
+        managed = False
+        db_table = 'SURVEYMASTER'
 
 class Customermaster(models.Model):
     customerid = models.IntegerField(db_column='CustomerID', primary_key=True)  # Field name made lowercase.
     customer_name = models.CharField(db_column='Customer_Name', max_length=50)  # Field name made lowercase.
     customer_email = models.CharField(db_column='Customer_Email', max_length=50, blank=True)  # Field name made lowercase.
     customer_dob = models.CharField(db_column='Customer_DOB', max_length=50, blank=True)  # Field name made lowercase.
-    customer_age = models.IntegerField(db_column='Customer_Age', blank=True, null=True)  # Field name made lowercase.
-    customer_size1id = models.IntegerField(db_column='Customer_Size1ID', blank=True, null=True)  # Field name made lowercase.
-    customer_size2id = models.IntegerField(db_column='Customer_Size2ID', blank=True, null=True)  # Field name made lowercase.
+    customer_age = models.CharField(db_column='Customer_Age',max_length=100, blank=True, null=True)  # Field name made lowercase.
+    customer_topsize = models.CharField(db_column='Customer_TopSize', max_length=100, blank=True)  # Field name made lowercase.
+    customer_dresssize = models.CharField(db_column='Customer_DressSize', max_length=100, blank=True)  # Field name made lowercase.
     customer_current_occid = models.IntegerField(db_column='Customer_Current_OccID')  # Field name made lowercase.
     customer_current_styleid = models.IntegerField(db_column='Customer_Current_StyleID')  # Field name made lowercase.
+    customer_current_styleid_secondary = models.IntegerField(db_column='Customer_Current_StyleID_Secondary')  # Field name made lowercase.
     customer_current_budgetid = models.IntegerField(db_column='Customer_Current_BudgetID')  # Field name made lowercase.
     customer_bodytype = models.CharField(db_column='Customer_BodyType', max_length=50, blank=True)  # Field name made lowercase.
     customer_actual_budget = models.IntegerField(db_column='Customer_Actual_Budget', blank=True, null=True)  # Field name made lowercase.
+    customer_pantsize = models.CharField(db_column='Customer_PantSize', max_length=100, blank=True)  # Field name made lowercase.
+    customer_celebrity_closet = models.CharField(db_column='Customer_Celebrity_Closet', max_length=100, blank=True)  # Field name made lowercase.
+    customer_comments = models.CharField(db_column='Customer_Comments', max_length=200, blank=True)  # Field name made lowercase.
+    surveyid = models.ForeignKey('Surveymaster', db_column='SurveyID', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

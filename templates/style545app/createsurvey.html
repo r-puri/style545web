@@ -1,0 +1,64 @@
+{% extends 'style545app/base.html' %}
+
+{% load style545_extras %}
+
+{% load staticfiles %}
+
+
+{% block title %}Looks{% endblock %}
+
+{% block body_block %}
+<script>
+function submitform(){
+  if document.getElementById("SurveyName").value==""{
+    alert('Enter Survey Name')
+    return false
+  }
+  document.getElementById("survey").submit()
+}
+</script>
+<div class="page-header">
+            <h1 >Create Survey</h1>
+            <p>Create a new survey</p>
+</div>
+{%if post%}
+{% if created %}
+<div class="alert alert-success" role="alert">
+<strong>Survey Created</strong>
+</div>
+{% else %}
+<div class="alert alert-danger" role="alert">
+<strong>{{message}}</strong>
+</div>
+{%endif%}
+{%endif%}
+<form name="survey" id="survey" method="POST" action="/style545app/createsurvey">
+    {% csrf_token %}
+    <div class="row col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Create Survey</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+           <label>Survey name</label>
+           <input class="form-control" placeholder="Survey Name" id="SurveyName" maxlength="100" name="SurveyName" type="text" required autofocus=""/>
+        </div>
+        <div class="form-group">
+          <label>Vendor Name</label>
+          {%if vendor_list%}
+          <select name="vendorlist">
+            {%for vendor in vendor_list %}
+              <option value="{{vendor.id}}">{{vendor.Vendorname}}</option>
+            {%endfor%}
+          </select>
+          {%endif%}
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit" value="Submit" >Create Survey</button>
+        </div>
+      </div>
+    </div><!--Body-->
+  </div><!--Panel-->
+</div><!--row-->
+</form>
+{% endblock %}

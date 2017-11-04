@@ -24,6 +24,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 LOGIN_URL = '/style545app/login/'
+NUMBER_OF_ITEMS=5
 
 
 # Application definition
@@ -59,6 +60,17 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     TEMPLATE_PATH,
+)
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    #add this
+    "django.core.context_processors.request"
 )
 
 # Database

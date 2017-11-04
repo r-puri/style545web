@@ -8,6 +8,10 @@ from style545app.models import Budgetmaster
 from style545app.models import Looksmaster
 from style545app.models import Categorymaster
 from style545app.models import Bodymaster
+from style545app.models import Customermaster
+from style545app.models import Vendormaster
+from style545app.models import Surveymaster
+
 import json
 from django.http import JsonResponse
 from style545app.forms import SignUpForm
@@ -25,10 +29,220 @@ from rolepermissions.roles import get_user_roles
 import datetime
 from django.db import connection
 from itertools import chain
+from django.conf import settings
+from django.db import IntegrityError
+
 from django.db.models import Q
 from django.db.models import Max, Min
 
+def surveycomplete(request):
+    return render(request,'style545app/surveycomplete.html')
+def findmid(range):
+    if range=="50":
+        return(50)
+    if range=="50-100":
+        return(75)
+    if range=="100-200":
+        return(150)
+    if range=="200":
+        return(200)
 
+def getbudgetid(budget):
+    #gets budget ranges and allocates id #need to go to DB and fix DB table. DB table needs budget by vendor
+    if budget <= 50:
+        return(3)
+    if budget > 50 and budget <=100:
+        return(4)
+    if budget > 100 and budget <=300:
+        return(6)
+def createvendor(request):
+    if  not request.user.is_authenticated():
+       return HttpResponseRedirect('/style545app/login/')
+    if request.method=='POST':
+        vendorname=request.POST.get('VendorName')
+        if vendorname=="":
+            print('Error:Create Vendor:VendorName is empty')
+            created=False
+        else:
+            vendor=Vendormaster()
+            vendor.Vendorname=vendorname
+            try:
+                vendor.save()
+                created=True
+            except IntegrityError as e:
+                print e.message
+                created=False
+                context_dict = {'created': created,'post': True, 'Message':'Vendor Name exsists. Please use another name'}
+                return render(request,'style545app/createvendor.html',context_dict)
+            else:
+                context_dict = {'created': created,'post': True}
+                return render(request,'style545app/createvendor.html',context_dict)
+    else:
+        return render(request,'style545app/createvendor.html')
+
+
+def createsurvey(request):
+    if  not request.user.is_authenticated():
+       return HttpResponseRedirect('/style545app/login/')
+    if request.method=='POST':
+        surveyname=request.POST.get('SurveyName')
+        vendorid=request.POST.get('vendorlist')
+        if surveyname=="":
+            print('Error:Create Survey:SurveyName is empty')
+            created=False
+        if vendorid=="":
+            print('Error:Create Survey:VendorID is empty')
+            created=False
+        survey=Surveymaster()
+        survey.surveyname=surveyname
+        survey.surveykey=None
+        survey.createddate=datetime.datetime.now()
+        vendor_list=Vendormaster.objects.all()
+        message=""
+        try:
+            vendor=Vendormaster.objects.get(id=vendorid)
+            survey.vendorid=vendor
+        except Vendormaster.DoesNotExist:
+             print ('Error:Create Survey: Cannot find vendor')
+             created=False
+        if Surveymaster.objects.all().filter(vendorid=vendorid,surveyname=surveyname).exists(): #survey name/vendor id exsists
+            created=False
+            message="Survey Name already exists for the vendor. Try another name."
+            context_dict = {'created': created,'post': True,'vendor_list': vendor_list,'message': message}
+            return render(request,'style545app/createsurvey.html',context_dict)
+        else:
+            try:
+                survey.save()
+                created=True
+            except Exception as ex:
+                created=False
+                message="Error creating survey.Contact admin."
+                print ("Error:Create Survey" + ex)
+            finally:
+                context_dict = {'created': created,'post': True,'vendor_list': vendor_list,'message': message}
+                return render(request,'style545app/createsurvey.html',context_dict)
+    else:
+        #get list of vendors
+        vendor_list=Vendormaster.objects.all()
+        context_dict = {'vendor_list': vendor_list}
+        return render(request,'style545app/createsurvey.html',context_dict)
+
+
+
+
+def survey(request):
+    #defines the customer survey
+
+    if request.method=='POST':
+        customername=request.POST.get('validate-text')
+        customeremail=request.POST.get('validate-email')
+        customerzipcode=request.POST.get('zipcode')
+        customerage=request.POST.get('radioage')
+        customertopsize=request.POST.get('topsize')
+        customerpantsize=request.POST.get('pantsize')
+        customerdresssize=request.POST.get('dresssize')
+        customertopbudget=request.POST.get('budgettop')
+        customerpantbudget=request.POST.get('budgetpants')
+        customerdressbudget=request.POST.get('budgetdress')
+        customeraccessorybudget=request.POST.get('budgetaccessory')
+        customerouterbudget=request.POST.get('budgetouterwear')
+        customeroccid=request.POST.get('radioocc')
+        customerstyle=request.POST.getlist('checkboxstyle')
+        customerceleb=request.POST.get('celeb')
+        customercomments=request.POST.get('comments')
+        customerbodytype=request.POST.get('bodytype')
+        surveykey=request.POST.get('surveyid')
+        print('skey=' + str(surveykey))
+        survey=Surveymaster()
+        if (surveykey==""):
+                survey=Surveymaster.objects.get(id=1)
+        else:
+            try:
+                survey=Surveymaster.objects.get(surveykey=surveykey)
+            except Surveymaster.DoesNotExist:
+                survey=Surveymaster.objects.get(id=1)
+                pass
+
+
+
+        if (customername==""):
+            raise ValueError ('Error:Survey:Customer name is empty')
+        if (customeremail==""):
+            raise ValueError ('Error:Survey:Customer email address is empty')
+        #create customer object
+        #customer=Customermaster()
+        #try:
+        qscustomer=Customermaster.objects.filter(customer_email=customeremail)
+        print(len(qscustomer))
+        if len(qscustomer)==0:
+            customer=Customermaster()
+        if len(qscustomer)>=1:
+            customer=Customermaster()
+            customer=qscustomer[0]
+        #except customer.DoesNotExist:
+            #customer=Customermaster()
+
+        #print ('found records' + str(len(customer)))
+        #if len(customer)==0:
+            #customer=Customermaster()
+        customer.customer_name=customername
+        customer.customer_email=customeremail
+        customer.customer_comments=customercomments
+        customer.customer_age=customerage
+        customer.customer_topsize=customertopsize
+        customer.customer_dresssize=customerdresssize
+        customer.customer_pantsize=customerpantsize
+        customer.customer_bodytype=customerbodytype
+        topbudget=findmid(customertopbudget)
+        pantbudget=findmid(customerpantbudget)
+        dressbudget=findmid(customerdressbudget)
+        accessbudget=findmid(customeraccessorybudget)
+        outerbudget=findmid(customerouterbudget)
+        budget=(topbudget+pantbudget+dressbudget+accessbudget+outerbudget)/5
+        customer.customer_current_budgetid=getbudgetid(budget)
+        customer.surveyid=survey
+
+        print ("budget=" + str(budget))
+
+
+        if len(customerstyle)==0:
+            customer.customer_current_styleID=1
+        if len(customerstyle)==1:
+            customer.customer_current_styleid=customerstyle[0] # assuming first one is primary, change later
+        if len(customerstyle)>=2:
+            customer.customer_current_styleid=customerstyle[0]
+            customer.customer_current_styleid_secondary=customerstyle[1]
+        customer.customer_current_occid=customeroccid#customerstylepref
+        customer.customer_celebrity_closet=customerceleb
+        #customer.customer_current_budgetid=1
+        customer.save()
+
+
+        print (customeremail)
+        print (customername)
+        print (customerzipcode)
+        print (customerage)
+        print (customertopsize)
+        print (customerpantsize)
+        print (customerdresssize)
+        print (customerpantbudget)
+        print (customertopbudget)
+        print (customerdressbudget)
+        print (customeraccessorybudget)
+        print (customerouterbudget)
+        print (customeroccid)
+        print (customerstyle)
+        print (customerceleb)
+        print (customercomments)
+        return render(request,'style545app/surveycomplete.html')
+
+
+    else:
+        stylelist=Stylemaster.objects.all()
+        occasion_list= Occassionmaster.objects.order_by('-occassion_name')
+        body_list=Bodymaster.objects.order_by('-bodytype')
+        context_dict = {'styles_list': stylelist,'occasion_list':occasion_list,'body_list':body_list}
+        return render(request,'style545app/survey.html',context_dict)
 
 def updatelook(request):
  if request.method=='POST':
@@ -71,6 +285,7 @@ def updatelook(request):
 def viewlook(request):
  if  not request.user.is_authenticated():
     return HttpResponseRedirect('/style545app/login/')
+ number_of_items=settings.NUMBER_OF_ITEMS
  if request.method=='POST':
              lookid=(request.POST.get('looklist'))
              #Get look
@@ -82,7 +297,7 @@ def viewlook(request):
              bodyidlist=[]
              if (len(look))==1:
                  for l in look:
-                     for x in range(5):
+                     for x in range(number_of_items):
                          itemid=getattr(l, "item"+str(x+1)+"id")
                          print(itemid)
                          if (isinstance(itemid,long)):
@@ -250,7 +465,7 @@ def lookconfirm(request):
      return render(request,'style545app/lookconfirm.html')
 def index(request):
     #NumberofItems={} # Minimum number of items of a look
-     number_of_items_list=5
+     number_of_items_list=settings.NUMBER_OF_ITEMS
      if  not request.user.is_authenticated():
          return HttpResponseRedirect('/style545app/login/')
      if request.method == 'POST':
