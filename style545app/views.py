@@ -35,6 +35,17 @@ from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models import Max, Min
 
+
+def instore(request):
+    return render(request,'style545app/instore.html')
+
+def instoreview(request):
+    if request.method=='POST':
+        context_dict = {'post': True}
+        return render(request,'style545app/instorelook1.html',context_dict)
+    else:
+        return render(request,'style545app/instorelook1.html')
+
 def surveycomplete(request):
     return render(request,'style545app/surveycomplete.html')
 def findmid(range):

@@ -14,7 +14,11 @@ urlpatterns = patterns('',
          url(r'^survey', views.survey, name='survey'),
          url(r'^survey', views.survey, name='surveycomplete'),
          url(r'^createsurvey', views.createsurvey, name='createsurvey'),
-         url(r'^createvendor', views.createvendor, name='createvendor')
+         url(r'^createvendor', views.createvendor, name='createvendor'),
+         url(r'^instore', views.instore, name='instore'),
+         url(r'^storeview', views.instoreview, name='instoreview')
+
+
 
 
         )
