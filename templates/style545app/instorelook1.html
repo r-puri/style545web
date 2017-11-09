@@ -39,101 +39,38 @@
         <link rel="stylesheet" href="{%static "instore/css/responsive.css"%}" />
 
         <script src="{%static "instore/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"%}"></script>
-        <style>
-        #myImg {
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
 
-        #myImg:hover {opacity: 0.7;}
-
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 100px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-        }
-
-        /* Modal Content (image) */
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-        }
-
-        /* Caption of Modal Image */
-        #caption {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-            text-align: center;
-            color: #ccc;
-            padding: 10px 0;
-            height: 150px;
-        }
-
-        /* Add Animation */
-        .modal-content, #caption {
-            -webkit-animation-name: zoom;
-            -webkit-animation-duration: 0.6s;
-            animation-name: zoom;
-            animation-duration: 0.6s;
-        }
-
-        @-webkit-keyframes zoom {
-            from {-webkit-transform:scale(0)}
-            to {-webkit-transform:scale(1)}
-        }
-
-        @keyframes zoom {
-            from {transform:scale(0)}
-            to {transform:scale(1)}
-        }
-
-        /* The Close Button */
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        }
-
-        /* 100% Image Width on Smaller Screens */
-        @media only screen and (max-width: 700px){
-            .modal-content {
-                width: 100%;
-            }
-        }
-        </style>
     </head>
     <script>
     function submitform()
     {
-        document.getElementById("survey").submit()
+      lookno=getParameterByName("look")
+      switch(lookno) {
+      case "1":
+          window.location.replace('/style545app/storeview?look=2')
+          break;
+      case "2":
+            window.location.replace('/style545app/storeview?look=3')
+          break;
+      case "3":
+            window.location.replace('/style545app/storeview?look=4')
+          break;
+      default:
+           document.getElementById("survey").submit()
+        }
+
     }
-    </script>
+    function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+
     </script>
     <body>
       <nav class="navbar navbar-default">
@@ -152,34 +89,7 @@
               </nav>
 
 
-        <!-- The Modal -->
-<div id="myModal" class="modal">
-<span class="close" onclick="closespan();">&times;</span>
-  <img class="modal-content" id="img01">
-  <div id="caption"></div>
-</div>
 
-<script>
-// Get the modal
-function showlook(){
-  var modal = document.getElementById('myModal');
-
-  // Get the image and insert it inside the modal - use its "alt" text as a caption
-  var img = document.getElementById('myImg');
-  var modalImg = document.getElementById("img01");
-  var captionText = document.getElementById("caption");
-  modal.style.display = "block";
-  modalImg.src = "{%static "instore/images/OUTFIT 28.jpg" %}";
-  captionText.innerHTML = "Your look";
-
-}
-// Get the <span> element that closes the modal
-// When the user clicks on <span> (x), close the modal
-function closespan() {
-  var modal = document.getElementById('myModal');
-    modal.style.display = "none";
-}
-</script>
 
 {%if post%}
 <section id="business" class="portfolio sections">
@@ -197,18 +107,116 @@ function closespan() {
 
                                    Hope you like your curated look!<br/>
                                    Please return this ipad to the store associated.<br/><br/>
-                                   <p>Cinnamon + Style545<p>
+                                   <p><b>Cinnamon + Style545</b><p>
 
                                  </tr>
                                 </table>
-                                <div class="center-content">
+                                <!--<div class="center-content">
                                   <input type="button" id="showlook" value="Store Associate" class="btn btn-default" onclick="showlook();">
-                                         </div>
+                                </div>-->
                             </div>
                         </div>
                   </div>
                 </div>
-              </div><!--row-->
+      </div><!--row-->
+      <div class="head_title text-center">
+      <h3>Store associate, please pull the following items</h3>
+    </div>
+      <div class="col-sm-offset-1 row">
+                 <div class="portfolio-wrapper text-center">
+                     <div class="col-md-4 col-sm-8 col-xs-12">
+                         <div class="community-edition">
+                            <h4>Look 1</h4>
+                             <table class="table">
+                               <tr>
+                                 <td>
+                                    <img id="lookpic" src="{%static "instore/images/OUTFIT 28.jpg" %}" alt="" height="" width="">
+                                 </td>
+                               </tr>
+                             </table>
+                             <table class="table">
+                               <tr>
+                                  <td class="text-left">Item</td>
+                                  <td class="text-left">Quantity</td>
+                               </tr>
+                               <tr>
+                                  <td class="text-left">Top: Boss , Item:1201, Shelf 4</td>
+                                  <td class="text-left"><span class="label label-danger">12</span></td>
+                               </tr>
+                               <tr>
+                                  <td class="text-left">Pants: Rag& Bone, Item:1001, Shelf 5</td>
+                                  <td class="text-left"><span class="label label-danger">10</span></td>
+                               </tr>
+                             </table>
+                             <div class="center-content">
+                                          <input type="button" value="Select" class="btn btn-default" onclick="">
+                                      </div>
+                         </div>
+                     </div>
+
+                     <div class="portfolio-wrapper text-center">
+                         <div class="col-md-4 col-sm-8 col-xs-12">
+                           <div class="community-edition">
+                              <h4>Look 2</h4>
+                               <table class="table">
+                                 <tr>
+                                   <td>
+                                      <img id="lookpic" src="{%static "instore/images/OUTFIT 25.jpg" %}" alt="" height="" width="">
+                                   </td>
+                                 </tr>
+                               </table>
+                               <table class="table">
+                                 <tr>
+                                    <td class="text-left">Item</td>
+                                    <td class="text-left">Quantity</td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-left">Watch: Timex , Item:101, Display</td>
+                                    <td class="text-left"><span class="label label-danger">12</span></td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-left">Shoes: Sam Eldelmen , Item:1100, Shelf 1</td>
+                                    <td class="text-left"><span class="label label-danger">12</span></td>
+                                 </tr>
+                               </table>
+                               <div class="center-content">
+                                            <input type="button" value="Select" class="btn btn-default" onclick="">
+                                        </div>
+                           </div>
+                         </div>
+                   </div>
+                   <div class="portfolio-wrapper text-center">
+                       <div class="col-md-4 col-sm-8 col-xs-12">
+                         <div class="community-edition">
+                            <h4>Look 3</h4>
+                             <table class="table">
+                               <tr>
+                                 <td>
+                                    <img id="lookpic" src="{%static "instore/images/OUTFIT 17.jpg" %}" alt="" height="" width="">
+                                 </td>
+                               </tr>
+                             </table>
+                             <table class="table">
+                               <tr>
+                                  <td class="text-left">Item</td>
+                                  <td class="text-left">Quantity</td>
+                               </tr>
+                               <tr>
+                                  <td class="text-left">Skirt: Halogen , Item:2312, Display</td>
+                                  <td class="text-left"><span class="label label-danger">1</span></td>
+                               </tr>
+                               <tr>
+                                  <td class="text-left">Top: Calson , Item:1050, Shelf 3</td>
+                                  <td class="text-left"><span class="label label-danger">5</span></td>
+                               </tr>
+                             </table>
+                             <div class="center-content">
+                                          <input type="button" value="Select" class="btn btn-default" onclick="">
+                                      </div>
+                         </div>
+                       </div>
+                 </div>
+                 </div><!--row-->
 </section>
 {%else%}
 <form name="survey" id="survey" method="POST" action="/style545app/storeview">
@@ -221,13 +229,17 @@ function closespan() {
     <div class="col-sm-offset-4 row">
                    <div class="portfolio-wrapper text-center">
                        <div class="portfolio-wrapper text-center">
-                           <div class="col-md-6 col-sm-12 col-xs-12">
+                           <div class="col-md-8 col-sm-12 col-xs-12">
                                <div class="community-edition">
-                                  <h4>Cinnamon + Style Look 1</h4>
+                                  <h4 id="header"></h4>
+                                  <script>
+                                    lookno=getParameterByName("look")
+                                    document.getElementById("header").innerHTML="Cinnamon + Style Look " + lookno
+                                  </script>
                                    <table class="table">
                                     <tr>
                                       <td>
-                                         <img src="{%static "instore/images/OUTFIT 28.jpg" %}" alt="" height="" width="">
+                                         <img id="lookpic"  alt="" height="" width="">
                                        </td>
                                       <td class="text-left" width="100">
                                         <br/>  <br/>  <br/><br/>
@@ -244,13 +256,17 @@ function closespan() {
   </div>
 <div class="radio">
                                        <label><input type="radio" name="radioage" value="50+">Pants</label>
+                                     </div>
+                                   <div class="radio">
+                                        <label><input type="radio" name="radioage" value="50+">Shoes</label>
+                                     </div>
   </div>
                                      </div>
                                       </td>
                                     </tr>
                                    </table>
                                    <div class="center-content">
-                                     <input type="button" value="Next" class="btn btn-default" onclick="submit();">
+                                     <input type="button" value="Next" class="btn btn-default" onclick="submitform();">
                                             </div>
                                </div>
                            </div>
@@ -260,4 +276,24 @@ function closespan() {
    </section>
 {%endif%}
  </form>
+ <script>
+   lookno=getParameterByName("look")
+   var img=document.getElementById("lookpic")
+   switch(lookno) {
+   case "1":
+       img.src="{%static "instore/images/OUTFIT 28.jpg" %}"
+       break;
+   case "2":
+       img.src="{%static "instore/images/OUTFIT 17.jpg" %}"
+       break;
+   case "3":
+       img.src="{%static "instore/images/OUTFIT 25.jpg" %}"
+       break;
+   case "4":
+       img.src="{%static "instore/images/OUTFIT 41.jpg" %}"
+       break;
+   default:
+      img.src="{%static "instore/images/OUTFIT 28.jpg" %}"
+     }
+ </script>
 </body>

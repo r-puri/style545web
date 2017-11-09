@@ -13,7 +13,51 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-108072950-1');
-      </script>
+
+      function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+      }
+      function submitform(flag)
+      {
+        lookno=getParameterByName("step")
+      if (flag==1){
+        switch(lookno) {
+        case "2":
+              window.location.replace('/style545app/instoreview?step=1')
+            break;
+        case "3":
+              window.location.replace('/style545app/instoreview?step=2')
+            break;
+        default:
+               window.location.replace('/style545app/instoreview?step=1')
+          }
+
+      }
+      else{
+        switch(lookno) {
+        case "1":
+            window.location.replace('/style545app/instoreview?step=2')
+            break;
+        case "2":
+              window.location.replace('/style545app/instoreview?step=3')
+            break;
+        case "3":
+              window.location.replace('/style545app/storeview?look=1')
+            break;
+        default:
+               window.location.replace('/style545app/instoreview?step=2')
+          }
+
+      }
+    }
+
+  </script>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Style545+Cinnamon</title>
@@ -61,7 +105,7 @@
      <div class="head_title text-center">
         <h1>In Store Survey</h1>
     </div>
-    <div class="col-sm-offset-4 row">
+    <div id="step1" class="col-sm-offset-4 row">
                    <div class="portfolio-wrapper text-center">
                        <div class="portfolio-wrapper text-center">
                            <div class="col-md-6 col-sm-12 col-xs-12">
@@ -95,12 +139,165 @@
                                      </tr>
                                    </table>
                                    <div class="center-content">
-                                     <input type="button" value="Next" class="btn btn-default" onclick="window.location.replace('/style545app/storeview');">
+                                     <input type="button" value="Next" class="btn btn-default" onclick="submitform();">
                                             </div>
                                </div>
                            </div>
                      </div>
                    </div>
                  </div><!--row-->
+                 <div id="step2" class="col-sm-offset-4 row">
+                                <div class="portfolio-wrapper text-center">
+                                    <div class="portfolio-wrapper text-center">
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="community-edition">
+                                               <h4>Cinnamon + Style Quiz: Step 2/3</h4>
+                                               <h5>Body Shape & Budget</h5>
+                                                <table class="table">
+                                                  <tr>
+                                                      <td>
+                                                        <img src="{%static "instore/images/bodyshapes.jpg" %}">
+                                                      </td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td class="text-left">
+                                                        <div class="form-group">
+                                                          <label for="validate-text">Which of these best decribes your body?</label>
+                                                          <div class="select">
+                                                            <select>
+                                                              <option value="" selected>Hourglass</option>
+                                                              <option value="" >Pear</option>
+                                                              <option value="" >Aple</option>
+                                                              <option value="" >Rectangle</option>
+                                                            </select>
+                                                          </div>
+                                                        </div>
+                                                      </td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td class="text-left">
+                                                        <div class="form-group">
+                                                          <label for="validate-text">What is your avergage budget for a full outfit?</label>
+                                                          <div class="select">
+                                                            <select>
+                                                              <option value="" selected>Around $400 or less</option>
+                                                              <option value="" >Around $650</option>
+                                                              <option value="" >Aroung $900 or more</option>
+                                                            </select>
+                                                          </div>
+                                                        </div>
+                                                      </td>
+                                                  </tr>
+
+                                                </table>
+                                                <div class="center-content">
+                                                  <input type="button" value="Previous" class="btn btn-default" onclick="submitform(1);">
+
+                                                 <input type="button" value="Next" class="btn btn-default" onclick="submitform();">
+                                              </div>
+                                            </div>
+                                        </div>
+                                  </div>
+                                </div>
+                              </div><!--row-->
+                              <div id="step3" class="col-sm-offset-4 row">
+                                             <div class="portfolio-wrapper text-center">
+                                                 <div class="portfolio-wrapper text-center">
+                                                     <div class="col-md-8 col-sm-12 col-xs-12">
+                                                         <div class="community-edition">
+                                                            <h4>Cinnamon + Style Quiz: Step 3/3</h4>
+                                                            <h5>Style Preferences</h5>
+                                                             <table class="table">
+                                                               <tr>
+                                                                  <td class="text-left">
+                                                                    <div class="form-group">
+                                                                    <label for="validate-text">What occasion are you shopping for today?</label>
+                                                                      <div class="radio">
+                                                                   <label><input type="radio" name="radioage" value="18-25">Night Out</label>
+                          </div>
+                            <div class="radio">
+                                                          <label><input type="radio" name="radioage" value="26-35" checked>Everyday Casual</label>
+                              </div>
+                            <div class="radio">
+                                                                   <label><input type="radio" name="radioage" value="36-50">Business Casual</label>
+                              </div>
+                            <div class="radio">
+                                                                   <label><input type="radio" name="radioage" value="50+">Holiday Flair</label>
+                              </div>
+                                                                 </div>
+                                                                </td>
+                                                                <td/>
+                                                               </tr>
+                                                               <tr>
+                                                                <td class="text-left">
+                                                                    <label for="validate-text">How would you describe your style?</label>
+                                                                 </td>
+                                                                 <td/>
+                                                               </tr>
+                                                               <tr>
+                                                                <td class="text-left">
+                                                                  <img id="celebimage" style="width:150px;height:200px;" src="{%static "images/kate.jpg"%}"><br>
+                                                                   <label><input type="radio" name="radioage" value="36-50"> &nbsp;Classic</label>
+                                                                 </td>
+                                                                 <td class="text-left">
+                                                                   <img id="celebimage" style="width:150px;height:200px;" src="{%static "images/jlo.jpg"%}"><br>
+                                                                    <label><input type="radio" name="radioage" value="36-50"> &nbsp;Glamorous</label>
+                                                                  </td>
+                                                               </tr>
+                                                               <tr>
+                                                                <td class="text-left">
+                                                                  <img id="celebimage" style="width:150px;height:200px;" src="{%static "images/katehudson.jpg"%}"><br>
+                                                                   <label><input type="radio" name="radioage" value="36-50"> &nbsp;Bohemian</label>
+                                                                 </td>
+                                                                 <td class="text-left">
+                                                                   <img id="celebimage" style="width:150px;height:200px;" src="{%static "images/becks.jpg"%}"><br>
+                                                                    <label><input type="radio" name="radioage" value="36-50"> &nbsp;Modern</label>
+                                                                  </td>
+                                                               </tr>
+                                                               <tr>
+                                                                <td class="text-left">
+                                                                  <img id="celebimage" style="width:150px;height:200px;" src="{%static "images/gwen.jpg"%}"><br>
+                                                                   <label><input type="radio" name="radioage" value="36-50"> &nbsp;Edgy</label>
+                                                                 </td>
+                                                                 <td/>
+                                                               </tr>
+                                                             </table>
+                                                             <div class="center-content">
+                                                               <input type="button" value="Previous" class="btn btn-default" onclick="submitform(1);">
+
+                                                              <input type="button" value="Next" class="btn btn-default" onclick="submitform();">
+                                                           </div>
+                                                         </div>
+                                                     </div>
+                                               </div>
+                                             </div>
+                                           </div><!--row-->
    </section>
+   <script>
+   lookno=getParameterByName("step")
+   var img=document.getElementById("lookpic")
+   switch(lookno) {
+   case "1":
+       document.getElementById("step1").style.display="block"
+       document.getElementById("step2").style.display="none"
+       document.getElementById("step3").style.display="none"
+       break;
+   case "2":
+      document.getElementById("step1").style.display="none"
+      document.getElementById("step2").style.display="block"
+      document.getElementById("step3").style.display="none"
+       break;
+   case "3":
+       document.getElementById("step1").style.display="none"
+       document.getElementById("step2").style.display="none"
+       document.getElementById("step3").style.display="block"
+       break;
+
+   default:
+   document.getElementById("step1").style.display="block"
+   document.getElementById("step2").style.display="none"
+   document.getElementById("step3").style.display="none"
+
+     }
+   </script>
 </body>
