@@ -10,8 +10,31 @@ from style545app.models import Budgetmaster
 
 
 
-
 register = template.Library()
+@register.filter
+def indexf(sequence, position):
+    return sequence[position][0]
+
+@register.filter
+def indexf1(sequence, position):
+    return sequence[position]
+
+
+@register.simple_tag
+def rendertable(looksmaster,itemslist):
+    rethtml=''
+    for j in range(len(looksmaster)):
+        rethtml+='<div class="alert alert-success" role="alert"><strong>Look '+ str(j+1)+ '</strong></div>'
+        rethtml+='<table><th>Item name</th><th>Designer</th><th>Price</th><th>Image</th>'
+        for i in range(len(itemslist)):
+            if itemslist[i][0]==looksmaster[j]:
+                rethtml=rethtml+'<tr><td>'+itemslist[i][2]+'</td><td>'+itemslist[i][4]+'</td><td>'+str(itemslist[i][6])
+                rethtml+='</td><td align="right"><img src="'+itemslist[i][9]+'height="150" width="150"/></td>'
+                rethtml+='</tr>'
+        rethtml=rethtml+'</table>'
+    return rethtml
+
+
 
 @register.inclusion_tag('style545app/category.html')
 def get_category_list(selectedcat):

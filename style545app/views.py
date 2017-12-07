@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from style545app.models import Stylemaster
 from style545app.models import Itemmaster
 from style545app.forms import Itemselector
@@ -34,6 +35,7 @@ from django.db import IntegrityError
 
 from django.db.models import Q
 from django.db.models import Max, Min
+from style545app.models import MY_UTIL
 
 
 def instore(request):
@@ -41,13 +43,41 @@ def instore(request):
 
 def instoreview(request):
     if request.method=='POST':
-        context_dict = {'post': True}
+
+        context_dict = {'post': True, 'customerlist':ret}
+        for c in ret:
+            print(c[1])
         return render(request,'style545app/instorelook1.html',context_dict)
     else:
         return render(request,'style545app/instorelook1.html')
 
 def surveycomplete(request):
-    return render(request,'style545app/surveycomplete.html')
+    #read customer id from querystring to call the look SP
+    cid = int(request.GET.get('c'))
+    my_util = MY_UTIL()
+    itemslist = my_util.get_looks(cid)
+    i=0
+    looksmaster=[]
+    for item in itemslist:
+        print (itemslist[i][0])
+        if not(itemslist[i][0] in looksmaster):
+            looksmaster.insert(i,itemslist[i][0])
+        i=i+1
+    print looksmaster
+    i=0
+    j=0
+    for look in looksmaster:
+        print ("Look: " + str(i+1))
+        j=0
+        for item in itemslist:
+            if itemslist[j][0]==looksmaster[i]:
+                print ("evaluating.." + str(itemslist[j]))
+                print ('name:' +itemslist[j][2])
+                print ('designer:'+itemslist[j][4])
+            j=j+1
+        i=i+1
+    context_dict = {'looksmaster': looksmaster, 'itemslist':itemslist}
+    return render(request,'style545app/surveycomplete.html',context_dict)
 def findmid(range):
     if range=="50":
         return(50)
@@ -245,7 +275,10 @@ def survey(request):
         print (customerstyle)
         print (customerceleb)
         print (customercomments)
-        return render(request,'style545app/surveycomplete.html')
+        qscustomer=Customermaster.objects.filter(customer_email=customeremail)
+        print ('CustomerID created was:',qscustomer[0].customerid)
+        return redirect('showlook/?c='+str(qscustomer[0].customerid))
+        #return render(request,'style545app/showlook')
 
 
     else:

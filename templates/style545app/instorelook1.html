@@ -91,10 +91,14 @@
 
 
 
-{%if post%}
+   {%if post%}
 <section id="business" class="portfolio sections">
   <div class="head_title text-center">
-     <h1>In Store Survey</h1>
+     <h1>
+       {%for c in customerlist%}
+       In Store Survey for :{{c[1]}}
+       {%endfor%}
+     </h1>
  </div>
  <div class="col-sm-offset-4 row">
                 <div class="portfolio-wrapper text-center">

@@ -12,6 +12,17 @@ from __future__ import unicode_literals
 from django.db import models
 
 from django.template.defaultfilters import slugify
+
+from django.db import connection
+class MY_UTIL():
+    def get_looks(self,cid):
+        cursor = connection.cursor()
+        #cursor.callproc("Style545.Get_Customer", ())# calls PROCEDURE named LOG_MESSAGE which resides in MY_UTIL Package
+        cursor.execute('call style545.GetLooks('+str(cid)+');')
+        ret = cursor.fetchall()
+        cursor.close()
+        return ret
+
 class MyModel(models.Model):
     def class_name(self):
         return "%s"%(slugify(self.name))
